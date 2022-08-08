@@ -14,6 +14,8 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm i
+      - name: Compile artifacts
+        run: npm run compile
       - name: Run checks
         run: npm run check
       - name: Run tests
