@@ -1,0 +1,23 @@
+{
+  "name": "mev-boost-relay-whitelist",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "compile": "hardhat compile",
+    "check": "hardhat check",
+    "test": "hardhat test",
+    "node": "hardhat node",
+    "deploy": "hardhat deploy --network"
+  },
+  "author": "Lido <info@lido.fi>",
+  "homepage": "https://lido.fi/",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
+    "hardhat": "^2.10.1",
+    "dotenv": "^16.0.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.7.2"
+  }
+}
