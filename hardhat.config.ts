@@ -4,7 +4,7 @@ import './tasks/deploy';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const rpcUrl = process.env.RPC_URL;
+const rpcUrl = process.env.RPC_URL ?? '';
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY;
 
 const deployer = process.env.DEPLOYER_PRIVATE_KEY;
