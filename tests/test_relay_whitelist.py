@@ -5,9 +5,10 @@ Tests for MEV Boost Relays Whitelist
 from ape import reverts
 from ape.managers.converters import HexConverter
 from conftest import assert_single_event, suppress_3rd_party_deprecation_warnings, Relay
+from config import lido_dao_agent_address
 
 
-MAX_RELAYS_NUM = 20  # supposed to correspond to the limit in the contract
+MAX_RELAYS_NUM = 40  # supposed to correspond to the limit in the contract
 
 
 TEST_RELAY0 = Relay(
@@ -34,6 +35,7 @@ TEST_RELAY1_URI_HASH = HexConverter().convert(
 def test_initial_state(whitelist):
     assert whitelist.get_relays_amount() == 0
     assert whitelist.get_relays() is None, "must have 0 relays initially"
+    assert whitelist.get_lido_dao_agent() == lido_dao_agent_address
 
 
 def test_add_relay(whitelist, deployer):

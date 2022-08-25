@@ -5,7 +5,7 @@ from ape.contracts.base import ContractEvent
 from ape.types import ContractLog, AddressType
 from ape.api.transactions import ReceiptAPI
 
-from config import dai_token_address
+from config import dai_token_address, lido_dao_agent_address
 
 
 suppress_3rd_party_deprecation_warnings = pytest.mark.filterwarnings(
@@ -34,7 +34,7 @@ def stranger():
 
 @pytest.fixture()
 def whitelist(deployer):
-    return project.MEVBoostRelayWhitelist.deploy(sender=deployer)
+    return project.MEVBoostRelayWhitelist.deploy(lido_dao_agent_address, sender=deployer)
 
 
 @pytest.fixture(scope="module")

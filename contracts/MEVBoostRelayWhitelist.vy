@@ -8,13 +8,6 @@
 
 from vyper.interfaces import ERC20
 
-
-MAX_STRING_LENGTH: constant(uint256) = 1024
-MAX_NUM_RELAYS: constant(uint256) = 20
-
-LIDO_DAO_AGENT: constant(address) = 0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c
-
-
 # The relay was added
 event RelayAdded:
     uri: String[MAX_STRING_LENGTH]
@@ -47,14 +40,30 @@ struct Relay:
     description: String[MAX_STRING_LENGTH]
 
 
+# Just some sane number
+MAX_STRING_LENGTH: constant(uint256) = 1024
+
+# Just some sane number
+MAX_NUM_RELAYS: constant(uint256) = 40
+
+LIDO_DAO_AGENT: immutable(address)
+
 relays: public(DynArray[Relay, MAX_NUM_RELAYS])
 
 owner: public(address)
 
 
 @external
-def __init__():
+def __init__(lido_agent: address):
     self._set_owner(msg.sender)
+    LIDO_DAO_AGENT = lido_agent
+
+
+@view
+@external
+def get_lido_dao_agent() -> address:
+    """Return the address of Lido DAO Agent contract"""
+    return LIDO_DAO_AGENT
 
 
 @view
@@ -70,9 +79,7 @@ def get_relays_amount() -> uint256:
 @view
 @external
 def get_relays() -> DynArray[Relay, MAX_NUM_RELAYS]:
-    """
-    @notice Return list of the whitelisted relays
-    """
+    """Return list of the whitelisted relays"""
     return self.relays
 
 
@@ -107,7 +114,7 @@ def add_relay(
     assert uri != empty(String[MAX_STRING_LENGTH]), "relay URI must not be empty"
 
     index: uint256 = self._find_relay(uri)
-    assert index == MAX_NUM_RELAYS, "relay with the URI already exists"
+    assert index == max_value(uint256), "relay with the URI already exists"
 
     self.relays.append(Relay({
         uri: uri,
@@ -133,7 +140,7 @@ def remove_relay(uri: String[MAX_STRING_LENGTH]):
     index: uint256 = self._find_relay(uri)
     assert index < num_relays, "no relay with the URI"
 
-    if num_relays > 1:
+    if index != (num_relays - 1):
         self.relays[index] = self.relays[num_relays - 1]
 
     self.relays.pop()
@@ -159,7 +166,7 @@ def __default__():
 @view
 @internal
 def _find_relay(uri: String[MAX_STRING_LENGTH]) -> uint256:
-    index: uint256 = MAX_NUM_RELAYS
+    index: uint256 = max_value(uint256)
     i: uint256 = 0
     for r in self.relays:
         if r.uri == uri:

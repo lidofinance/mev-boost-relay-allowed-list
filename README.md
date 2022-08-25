@@ -6,7 +6,7 @@ MEV-Boost relay whitelist is a simple contract storing a list of relays that hav
 
 ```shell
 poetry install
-npm i
+npm install
 export WEB3_INFURA_PROJECT_ID=<your infura project id>
 ```
 
@@ -33,5 +33,8 @@ Deploy from the console:
 ```python
 from ape import accounts, project
 account = accounts.load("my_account_alias")
+lido_dao_agent_address = "PUT THE ADDRESS FOR THE TARGET NETWORK HERE"
 project.MEVBoostRelayWhitelist.deploy(sender=account)
 ```
+
+**TODO**: Load the Lido DAO Agent address from config
