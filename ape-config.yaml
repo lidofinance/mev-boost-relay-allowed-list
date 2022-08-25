@@ -1,0 +1,7 @@
+name: mev-boost-relay-whitelist
+
+hardhat:
+  fork:
+    ethereum:
+      mainnet:
+        upstream_provider: infura
