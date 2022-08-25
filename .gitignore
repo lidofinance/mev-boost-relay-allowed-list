@@ -4,6 +4,8 @@ coverage
 coverage.json
 typechain
 typechain-types
+**/__pycache__
+.vscode
 
 #Hardhat files
 cache
