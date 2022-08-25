@@ -6,6 +6,7 @@ typechain
 typechain-types
 **/__pycache__
 .vscode
+.build
 
 #Hardhat files
 cache
