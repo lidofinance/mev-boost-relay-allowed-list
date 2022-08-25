@@ -123,7 +123,7 @@ def add_relay(
 def remove_relay(uri: String[MAX_STRING_LENGTH]):
     """
     @notice Add relay to the whitelist. Can be executed only by the owner.
-            Reverts if there is no such relay.
+            Reverts if there is no such relay. Order of the relays might get changed.
     @param uri URI of the relay. Must be non-empty
     """
     self._check_sender_is_owner()

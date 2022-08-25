@@ -7,6 +7,9 @@ from ape.managers.converters import HexConverter
 from conftest import assert_single_event, suppress_3rd_party_deprecation_warnings, Relay
 
 
+MAX_RELAYS_NUM = 20  # supposed to correspond to the limit in the contract
+
+
 TEST_RELAY0 = Relay(
     uri="https://0xb124d80a00b80815397b4e7f1f05377ccc83aeeceb6be87963ba3649f1e6efa32ca870a88845917ec3f26a8e2aa25c77@one.mev-boost-relays.test",
     operator="Relay Operator #1",
@@ -51,15 +54,16 @@ def test_add_relay_with_same_uri(whitelist, deployer):
 
 @suppress_3rd_party_deprecation_warnings
 def test_add_too_many_relays(whitelist, deployer):
-    MAX_RELAYS_NUM: int = 20
-    for i in range(MAX_RELAYS_NUM):
-        whitelist.add_relay(*Relay(f"uri #{i}", "", False, ""), sender=deployer)
+    test_relays = [list(Relay(f"uri #{i}", "", bool(i % 2), "")) for i in range(MAX_RELAYS_NUM)]
+
+    for relay in test_relays:
+        whitelist.add_relay(*relay, sender=deployer)
+
+    for actual, expected in zip(whitelist.get_relays(), test_relays):
+        assert list(actual) == expected
 
     with reverts():
         whitelist.add_relay(*TEST_RELAY0, sender=deployer)
-
-
-# TODO: test other elements after add or removal
 
 
 @suppress_3rd_party_deprecation_warnings
@@ -96,15 +100,6 @@ def test_remove_single_existing_relay(whitelist, deployer):
     )
 
 
-def test_remove_last_relay(whitelist, deployer):
-    whitelist.add_relay(*TEST_RELAY0, sender=deployer)
-    whitelist.add_relay(*TEST_RELAY1, sender=deployer)
-    receipt = whitelist.remove_relay(TEST_RELAY1.uri, sender=deployer)
-    assert_single_event(
-        receipt, whitelist.RelayRemoved, {"uri": TEST_RELAY1.uri, "uri_hash": TEST_RELAY1_URI_HASH}
-    )
-
-
 def test_remove_first_relay(whitelist, deployer):
     whitelist.add_relay(*TEST_RELAY0, sender=deployer)
     whitelist.add_relay(*TEST_RELAY1, sender=deployer)
@@ -112,6 +107,30 @@ def test_remove_first_relay(whitelist, deployer):
     assert_single_event(
         receipt, whitelist.RelayRemoved, {"uri": TEST_RELAY0.uri, "uri_hash": TEST_RELAY0_URI_HASH}
     )
+    assert whitelist.get_relays() == list(TEST_RELAY1)
+
+
+def test_remove_last_relay(whitelist, deployer):
+    whitelist.add_relay(*TEST_RELAY0, sender=deployer)
+    whitelist.add_relay(*TEST_RELAY1, sender=deployer)
+    receipt = whitelist.remove_relay(TEST_RELAY1.uri, sender=deployer)
+    assert_single_event(
+        receipt, whitelist.RelayRemoved, {"uri": TEST_RELAY1.uri, "uri_hash": TEST_RELAY1_URI_HASH}
+    )
+    assert whitelist.get_relays() == list(TEST_RELAY0)
+
+
+def test_remove_middle_relay(whitelist, deployer):
+    test_relays = [list(Relay(f"uri #{i}", "", bool(i % 2), "")) for i in range(MAX_RELAYS_NUM)]
+
+    for relay in test_relays:
+        whitelist.add_relay(*relay, sender=deployer)
+
+    whitelist.remove_relay("uri #7", sender=deployer)
+    test_relays[7] = test_relays.pop()
+
+    for actual, expected in zip(whitelist.get_relays(), test_relays):
+        assert list(actual) == expected
 
 
 @suppress_3rd_party_deprecation_warnings
