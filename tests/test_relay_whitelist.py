@@ -48,7 +48,7 @@ def test_initial_state(whitelist):
     assert whitelist.get_lido_dao_agent() == lido_dao_agent_address
 
 
-def test_add_relay2(whitelist, lido_agent):
+def test_add_relay(whitelist, lido_agent):
     receipt = whitelist.add_relay(*TEST_RELAY0, sender=lido_agent)
     assert_single_event(
         receipt, whitelist.RelayAdded, {"relay": TEST_RELAY0, "uri_hash": TEST_RELAY0_URI_HASH}

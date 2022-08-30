@@ -1,3 +1,5 @@
+import sys
+import os
 from typing import NamedTuple
 import pytest
 from ape import accounts, project
@@ -5,6 +7,7 @@ from ape.contracts.base import ContractEvent
 from ape.types import ContractLog, AddressType
 from ape.api.transactions import ReceiptAPI
 
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from config import dai_token_address, lido_dao_agent_address
 
 
