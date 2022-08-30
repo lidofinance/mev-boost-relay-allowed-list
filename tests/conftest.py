@@ -32,6 +32,11 @@ def stranger():
     return accounts.test_accounts[9]
 
 
+@pytest.fixture(scope="module")
+def lido_agent():
+    return accounts[lido_dao_agent_address]
+
+
 @pytest.fixture()
 def whitelist(deployer):
     return project.MEVBoostRelayWhitelist.deploy(lido_dao_agent_address, sender=deployer)

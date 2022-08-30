@@ -18,10 +18,6 @@ event RelayRemoved:
     uri_hash: indexed(String[MAX_STRING_LENGTH])
     uri: String[MAX_STRING_LENGTH]
 
-# Owner of the contract changed
-event OwnerChanged:
-    previous_owner: indexed(address)
-    new_owner: indexed(address)
 
 # The ERC20 token was transferred from the contract's address to the Lido treasury address
 event ERC20Recovered:
@@ -46,16 +42,15 @@ MAX_STRING_LENGTH: constant(uint256) = 1024
 # Just some sane number
 MAX_NUM_RELAYS: constant(uint256) = 40
 
+
 LIDO_DAO_AGENT: immutable(address)
 
 relays: public(DynArray[Relay, MAX_NUM_RELAYS])
 
-owner: public(address)
-
 
 @external
 def __init__(lido_agent: address):
-    self._set_owner(msg.sender)
+    assert lido_agent != empty(address), "zero lido agent address"
     LIDO_DAO_AGENT = lido_agent
 
 
@@ -84,18 +79,6 @@ def get_relays() -> DynArray[Relay, MAX_NUM_RELAYS]:
 
 
 @external
-def change_owner(owner: address):
-    """
-    Change owner of the contract. Can be executed only by the current owner.
-    The owner can modify the whitelist and change the owner.
-    """
-    self._check_sender_is_owner()
-    assert owner != empty(address), "zero owner"
-
-    self._set_owner(owner)
-
-
-@external
 def add_relay(
     uri: String[MAX_STRING_LENGTH],
     operator: String[MAX_STRING_LENGTH],
@@ -103,14 +86,14 @@ def add_relay(
     description: String[MAX_STRING_LENGTH]
 ):
     """
-    @notice Add relay to the whitelist. Can be executed only by the owner.
+    @notice Add relay to the whitelist. Can be executed only by the Lido Agent.
             Reverts if relay with the URI is already whitelisted.
     @param uri URI of the relay. Must be non-empty
     @param operator Name of the relay operator
     @param is_mandatory If the relay is mandatory for usage for Lido Node Operator
     @param description Description of the relay in free format
     """
-    self._check_sender_is_owner()
+    self._check_sender_is_lido_agent()
     assert uri != empty(String[MAX_STRING_LENGTH]), "relay URI must not be empty"
 
     index: uint256 = self._find_relay(uri)
@@ -130,11 +113,11 @@ def add_relay(
 @external
 def remove_relay(uri: String[MAX_STRING_LENGTH]):
     """
-    @notice Add relay to the whitelist. Can be executed only by the owner.
+    @notice Add relay to the whitelist. Can be executed only by the Lido Agent.
             Reverts if there is no such relay. Order of the relays might get changed.
     @param uri URI of the relay. Must be non-empty
     """
-    self._check_sender_is_owner()
+    self._check_sender_is_lido_agent()
     assert uri != empty(String[MAX_STRING_LENGTH]), "relay URI must not be empty"
 
     num_relays: uint256 = len(self.relays)
@@ -178,13 +161,5 @@ def _find_relay(uri: String[MAX_STRING_LENGTH]) -> uint256:
 
 
 @internal
-def _check_sender_is_owner():
-    assert msg.sender == self.owner, "not owner"
-
-
-@internal
-def _set_owner(owner: address):
-    assert owner != self.owner, "same owner"
-
-    log OwnerChanged(self.owner, owner)
-    self.owner = owner
+def _check_sender_is_lido_agent():
+    assert msg.sender == LIDO_DAO_AGENT, "not lido agent"
