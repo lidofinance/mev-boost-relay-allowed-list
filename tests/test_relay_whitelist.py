@@ -44,6 +44,7 @@ def test_zero_lido_agent(deployer, lido_agent):
 
 def test_initial_state(whitelist):
     assert whitelist.get_relays_amount() == 0
+    assert whitelist.get_whitelist_version() == 0
     assert whitelist.get_relays() is None, "must have 0 relays initially"
     assert whitelist.get_lido_dao_agent() == lido_dao_agent_address
 
@@ -55,6 +56,7 @@ def test_add_relay(whitelist, lido_agent):
     )
     relays = whitelist.get_relays()
     assert relays == list(TEST_RELAY0)
+    assert whitelist.get_whitelist_version() == 1
 
 
 @suppress_3rd_party_deprecation_warnings
@@ -62,6 +64,7 @@ def test_add_relay_with_same_uri(whitelist, lido_agent):
     whitelist.add_relay(*TEST_RELAY0, sender=lido_agent)
     with reverts("relay with the URI already exists"):
         whitelist.add_relay(*TEST_RELAY0, sender=lido_agent)
+    assert whitelist.get_whitelist_version() == 1
 
 
 @suppress_3rd_party_deprecation_warnings
@@ -73,6 +76,8 @@ def test_add_too_many_relays(whitelist, lido_agent):
 
     for actual, expected in zip(whitelist.get_relays(), test_relays):
         assert list(actual) == expected
+
+    assert whitelist.get_whitelist_version() == MAX_RELAYS_NUM
 
     with reverts():
         whitelist.add_relay(*TEST_RELAY0, sender=lido_agent)
@@ -110,6 +115,7 @@ def test_remove_single_existing_relay(whitelist, lido_agent):
     assert_single_event(
         receipt, whitelist.RelayRemoved, {"uri": TEST_RELAY0.uri, "uri_hash": TEST_RELAY0_URI_HASH}
     )
+    assert whitelist.get_whitelist_version() == 2
 
 
 def test_remove_first_relay(whitelist, lido_agent):
@@ -120,6 +126,7 @@ def test_remove_first_relay(whitelist, lido_agent):
         receipt, whitelist.RelayRemoved, {"uri": TEST_RELAY0.uri, "uri_hash": TEST_RELAY0_URI_HASH}
     )
     assert whitelist.get_relays() == list(TEST_RELAY1)
+    assert whitelist.get_whitelist_version() == 3
 
 
 def test_remove_last_relay(whitelist, lido_agent):
@@ -130,6 +137,7 @@ def test_remove_last_relay(whitelist, lido_agent):
         receipt, whitelist.RelayRemoved, {"uri": TEST_RELAY1.uri, "uri_hash": TEST_RELAY1_URI_HASH}
     )
     assert whitelist.get_relays() == list(TEST_RELAY0)
+    assert whitelist.get_whitelist_version() == 3
 
 
 def test_remove_middle_relay(whitelist, lido_agent):
@@ -143,6 +151,7 @@ def test_remove_middle_relay(whitelist, lido_agent):
 
     for actual, expected in zip(whitelist.get_relays(), test_relays):
         assert list(actual) == expected
+    assert whitelist.get_whitelist_version() == MAX_RELAYS_NUM + 1
 
 
 @suppress_3rd_party_deprecation_warnings

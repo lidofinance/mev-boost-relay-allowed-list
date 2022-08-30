@@ -29,6 +29,11 @@ event ERC20Recovered:
     amount: uint256
 
 
+# Emitted every time the whitelist is changed
+event RelaysUpdated:
+    whitelist_version: indexed(uint256)
+
+
 struct Relay:
     uri: String[MAX_STRING_LENGTH]
     operator: String[MAX_STRING_LENGTH]
@@ -42,10 +47,13 @@ MAX_STRING_LENGTH: constant(uint256) = 1024
 # Just some sane number
 MAX_NUM_RELAYS: constant(uint256) = 40
 
-
 LIDO_DAO_AGENT: immutable(address)
 
 relays: public(DynArray[Relay, MAX_NUM_RELAYS])
+
+# Incremented each time the list of relays is modified.
+# Introduced to facilitate easy versioning of whitelist
+whitelist_version: uint256
 
 
 @external
@@ -78,6 +86,16 @@ def get_relays() -> DynArray[Relay, MAX_NUM_RELAYS]:
     return self.relays
 
 
+@view
+@external
+def get_whitelist_version() -> uint256:
+    """
+    @notice Return version of the whitelist
+    @dev The version is incremented on every relays list update
+    """
+    return self.whitelist_version
+
+
 @external
 def add_relay(
     uri: String[MAX_STRING_LENGTH],
@@ -106,6 +124,7 @@ def add_relay(
         description: description,
     })
     self.relays.append(relay)
+    self._bump_version()
 
     log RelayAdded(uri, relay)
 
@@ -128,6 +147,7 @@ def remove_relay(uri: String[MAX_STRING_LENGTH]):
         self.relays[index] = self.relays[num_relays - 1]
 
     self.relays.pop()
+    self._bump_version()
 
     log RelayRemoved(uri, uri)
 
@@ -163,3 +183,10 @@ def _find_relay(uri: String[MAX_STRING_LENGTH]) -> uint256:
 @internal
 def _check_sender_is_lido_agent():
     assert msg.sender == LIDO_DAO_AGENT, "not lido agent"
+
+
+@internal
+def _bump_version():
+   new_version: uint256 = self.whitelist_version + 1
+   self.whitelist_version = new_version
+   log RelaysUpdated(new_version)
