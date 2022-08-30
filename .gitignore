@@ -8,7 +8,10 @@ typechain-types
 .vscode
 .build
 
-#Hardhat files
+# Ape auto-generated files
+hardhat.config.js
+
+# Hardhat files
 cache
 artifacts
 
