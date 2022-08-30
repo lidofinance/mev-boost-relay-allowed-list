@@ -41,7 +41,7 @@ def test_initial_state(whitelist):
 def test_add_relay(whitelist, deployer):
     receipt = whitelist.add_relay(*TEST_RELAY0, sender=deployer)
     assert_single_event(
-        receipt, whitelist.RelayAdded, {"uri": TEST_RELAY0.uri, "uri_hash": TEST_RELAY0_URI_HASH}
+        receipt, whitelist.RelayAdded, {"relay": TEST_RELAY0, "uri_hash": TEST_RELAY0_URI_HASH}
     )
     relays = whitelist.get_relays()
     assert relays == list(TEST_RELAY0)

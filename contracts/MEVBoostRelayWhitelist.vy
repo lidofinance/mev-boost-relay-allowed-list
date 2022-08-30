@@ -10,13 +10,13 @@ from vyper.interfaces import ERC20
 
 # The relay was added
 event RelayAdded:
-    uri: String[MAX_STRING_LENGTH]
     uri_hash: indexed(String[MAX_STRING_LENGTH])
+    relay: Relay
 
 # The relay was removed
 event RelayRemoved:
-    uri: String[MAX_STRING_LENGTH]
     uri_hash: indexed(String[MAX_STRING_LENGTH])
+    uri: String[MAX_STRING_LENGTH]
 
 # Owner of the contract changed
 event OwnerChanged:
@@ -116,14 +116,15 @@ def add_relay(
     index: uint256 = self._find_relay(uri)
     assert index == max_value(uint256), "relay with the URI already exists"
 
-    self.relays.append(Relay({
+    relay: Relay = Relay({
         uri: uri,
         operator: operator,
         is_mandatory: is_mandatory,
         description: description,
-    }))
+    })
+    self.relays.append(relay)
 
-    log RelayAdded(uri, uri)
+    log RelayAdded(uri, relay)
 
 
 @external
