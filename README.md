@@ -45,3 +45,11 @@ Let's assume the deploy account alias is `lido_deployer`. To deploy on mainnet f
 ```shell
 DEPLOYER=lido_deployer ape run deploy --network :mainnet-fork:hardhat
 ```
+
+## Code style
+
+Please, use the shared pre-commit hooks to maintain code style:
+
+```bash
+poetry run pre-commit install
+```
