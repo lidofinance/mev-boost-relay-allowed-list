@@ -1,7 +1,7 @@
 # @version 0.3.6
 # @title MEV Boost Relay Whitelist
 # @notice Storage of the whitelisted MEB-Boost relays.
-# @license GPL-3.0
+# @license MIT
 # @author Lido <info@lido.fi>
 # @dev Relay data modification is supposed to be done by remove and add,
 #      to reduce the number of lines of code of the contract.

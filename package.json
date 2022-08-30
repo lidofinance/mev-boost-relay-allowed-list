@@ -5,7 +5,7 @@
   "scripts": {},
   "author": "Lido <info@lido.fi>",
   "homepage": "https://lido.fi/",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "devDependencies": {},
   "dependencies": {
     "hardhat": "^2.10.1"
