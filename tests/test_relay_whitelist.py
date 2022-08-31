@@ -158,7 +158,7 @@ def test_remove_middle_relay(whitelist, lido_agent):
 def test_stranger_cannot_add_relay(whitelist, lido_agent, stranger):
     assert whitelist.get_lido_dao_agent() == lido_agent
 
-    with reverts("not lido agent"):
+    with reverts("msg.sender not lido agent"):
         whitelist.add_relay(*TEST_RELAY0, sender=stranger)
 
 
@@ -166,5 +166,5 @@ def test_stranger_cannot_add_relay(whitelist, lido_agent, stranger):
 def test_stranger_cannot_remove_relay(whitelist, lido_agent, stranger):
     assert whitelist.get_lido_dao_agent() == lido_agent
 
-    with reverts("not lido agent"):
+    with reverts("msg.sender not lido agent"):
         whitelist.remove_relay("arbitrary uri", sender=stranger)
