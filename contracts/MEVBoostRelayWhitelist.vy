@@ -18,6 +18,15 @@ event RelayRemoved:
     uri_hash: indexed(String[MAX_STRING_LENGTH])
     uri: String[MAX_STRING_LENGTH]
 
+# Emitted every time the whitelist is changed
+event RelaysUpdated:
+    whitelist_version: indexed(uint256)
+
+# Emitted when contract manager is set or dismissed
+# When dismissed the address is zero
+event ManagerChanged:
+    new_manager: indexed(address)
+
 
 # The ERC20 token was transferred from the contract's address to the Lido treasury address
 event ERC20Recovered:
@@ -29,11 +38,6 @@ event ERC20Recovered:
     amount: uint256
 
 
-# Emitted every time the whitelist is changed
-event RelaysUpdated:
-    whitelist_version: indexed(uint256)
-
-
 struct Relay:
     uri: String[MAX_STRING_LENGTH]
     operator: String[MAX_STRING_LENGTH]
@@ -41,15 +45,21 @@ struct Relay:
     description: String[MAX_STRING_LENGTH]
 
 
-# Just some sane number
+# Just some sane limit
 MAX_STRING_LENGTH: constant(uint256) = 1024
 
-# Just some sane number
+# Just some sane limit
 MAX_NUM_RELAYS: constant(uint256) = 40
 
+# Hardcoded owner of the contract
 LIDO_DAO_AGENT: immutable(address)
 
-relays: public(DynArray[Relay, MAX_NUM_RELAYS])
+# Manager can change the whitelist as well as Lido DAO
+# Can be assigned and dismissed by Lido DAO
+manager: address
+
+# List of the relays. Order might be arbutrary
+relays: DynArray[Relay, MAX_NUM_RELAYS]
 
 # Incremented each time the list of relays is modified.
 # Introduced to facilitate easy versioning of whitelist
@@ -77,6 +87,13 @@ def get_relays_amount() -> uint256:
     @return The number of the whitelisted relays
     """
     return len(self.relays)
+
+
+@view
+@external
+def get_manager() -> address:
+    """Return the address of manager of the contract"""
+    return self.manager
 
 
 @view
@@ -111,7 +128,7 @@ def add_relay(
     @param is_mandatory If the relay is mandatory for usage for Lido Node Operator
     @param description Description of the relay in free format
     """
-    self._check_sender_is_lido_agent()
+    self._check_sender_is_lido_agent_or_manager()
     assert uri != empty(String[MAX_STRING_LENGTH]), "relay URI must not be empty"
 
     index: uint256 = self._find_relay(uri)
@@ -136,7 +153,7 @@ def remove_relay(uri: String[MAX_STRING_LENGTH]):
             Reverts if there is no such relay. Order of the relays might get changed.
     @param uri URI of the relay. Must be non-empty
     """
-    self._check_sender_is_lido_agent()
+    self._check_sender_is_lido_agent_or_manager()
     assert uri != empty(String[MAX_STRING_LENGTH]), "relay URI must not be empty"
 
     num_relays: uint256 = len(self.relays)
@@ -153,17 +170,46 @@ def remove_relay(uri: String[MAX_STRING_LENGTH]):
 
 
 @external
-def recover_erc20(_token: address, _amount: uint256):
+def set_manager(manager: address):
     """
-    @notice Transfers ERC20 tokens from the contract's balance to the DAO treasury.
+    @notice Set contract manager. Zero address is not allowed.
+            Can update manager if it is already set.
+            Can be called only by Lido DAO.
+    @param manager Address of the new manager
     """
-    ERC20(_token).transfer(LIDO_DAO_AGENT, _amount)
-    log ERC20Recovered(msg.sender, _token, _amount)
+    self._check_sender_is_lido()
+    assert manager != empty(address), "zero manager address"
+    assert manager != self.manager, "same manager"
+
+    self.manager = manager
+    log ManagerChanged(manager)
+
+
+@external
+def dismiss_manager():
+    """
+    @notice Dismiss the manager. Reverts if no manager set.
+            Can be called only by Lido DAO.
+    """
+    self._check_sender_is_lido()
+    assert self.manager != empty(address), "no manager set"
+
+    self.manager = empty(address)
+    log ManagerChanged(empty(address))
+
+
+@external
+def recover_erc20(token: address, amount: uint256):
+    """
+    @notice Transfer ERC20 tokens from the contract's balance to the DAO treasury.
+    """
+    ERC20(token).transfer(LIDO_DAO_AGENT, amount)
+    log ERC20Recovered(msg.sender, token, amount)
 
 
 @external
 def __default__():
-    """Prevents receiving ether"""
+    """Prevent receiving ether"""
     raise
 
 
@@ -181,7 +227,14 @@ def _find_relay(uri: String[MAX_STRING_LENGTH]) -> uint256:
 
 
 @internal
-def _check_sender_is_lido_agent():
+def _check_sender_is_lido_agent_or_manager():
+    assert (
+        msg.sender == LIDO_DAO_AGENT or msg.sender == self.manager
+    ), "msg.sender not lido agent or manager"
+
+
+@internal
+def _check_sender_is_lido():
     assert msg.sender == LIDO_DAO_AGENT, "msg.sender not lido agent"
 
 

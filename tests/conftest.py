@@ -8,7 +8,11 @@ from ape.types import ContractLog, AddressType
 from ape.api.transactions import ReceiptAPI
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from config import dai_token_address, lido_dao_agent_address
+from config import (
+    dai_token_address,
+    lido_dao_agent_address,
+    lido_easy_track_script_executor_address,
+)
 
 
 suppress_3rd_party_deprecation_warnings = pytest.mark.filterwarnings(
@@ -38,6 +42,11 @@ def stranger():
 @pytest.fixture(scope="module")
 def lido_agent():
     return accounts[lido_dao_agent_address]
+
+
+@pytest.fixture(scope="module")
+def lido_easy_track_script_executor():
+    return accounts[lido_easy_track_script_executor_address]
 
 
 @pytest.fixture()

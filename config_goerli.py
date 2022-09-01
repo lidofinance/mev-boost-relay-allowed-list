@@ -1,2 +1,3 @@
 lido_dao_agent_address = "0x4333218072D5d7008546737786663c38B4D561A4"
+lido_easy_track_script_executor_address = "0x3c9AcA237b838c59612d79198685e7f20C7fE783"
 dai_token_address = "0xE68104D83e647b7c1C15a91a8D8aAD21a51B3B3E"
