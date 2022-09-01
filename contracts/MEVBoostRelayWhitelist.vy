@@ -6,7 +6,6 @@
 # @dev Relay data modification is supposed to be done by remove and add,
 #      to reduce the number of lines of code of the contract.
 
-from vyper.interfaces import ERC20
 
 # The relay was added
 event RelayAdded:
@@ -212,8 +211,10 @@ def recover_erc20(token: address, amount: uint256):
     """
     @notice Transfer ERC20 tokens from the contract's balance to the DAO treasury.
     """
-    ERC20(token).transfer(LIDO_DAO_AGENT, amount)
-    log ERC20Recovered(msg.sender, token, amount)
+    assert token != empty(address), "zero token address"
+    if amount > 0:
+        self._safe_erc20_transfer(token, LIDO_DAO_AGENT, amount)
+        log ERC20Recovered(msg.sender, token, amount)
 
 
 @external
@@ -254,3 +255,18 @@ def _bump_version():
    new_version: uint256 = self.whitelist_version + 1
    self.whitelist_version = new_version
    log RelaysUpdated(new_version)
+
+
+@internal
+def _safe_erc20_transfer(token: address, to: address, amount: uint256):
+    response: Bytes[32] = raw_call(
+        token,
+        concat(
+            method_id("transfer(address,uint256)"),
+            convert(to, bytes32),
+            convert(amount, bytes32)
+        ),
+        max_outsize=32
+    )
+    if len(response) > 0:
+        assert convert(response, bool), "erc20 transfer failed"

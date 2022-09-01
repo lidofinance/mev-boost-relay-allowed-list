@@ -13,7 +13,7 @@ from conftest import (
 from config import lido_dao_agent_address
 
 
-def test_recover_erc20(whitelist, stranger, dai_token, helpers):
+def test_recover_erc20_dai(whitelist, stranger, dai_token, helpers):
     agent_dai_before = dai_token.balanceOf(lido_dao_agent_address)
     dai_amount = 10**18
 
@@ -32,23 +32,17 @@ def test_recover_erc20(whitelist, stranger, dai_token, helpers):
 
 
 def test_recover_erc20_failure_due_amount(whitelist, stranger, dai_token, helpers):
-    agent_dai_before = dai_token.balanceOf(lido_dao_agent_address)
     dai_amount = 10**18
 
     helpers.fund_with_dai(whitelist, dai_amount)
     with reverts("Dai/insufficient-balance"):
         whitelist.recover_erc20(dai_token.address, dai_amount + 1, sender=stranger)
 
-        assert (
-            msg.sender == LIDO_DAO_AGENT or msg.sender == self.manager
-        ), "msg.sender not lido agent or manager"
-
 
 def test_recover_erc20_failure_due_zero_token_address(whitelist, stranger, dai_token, helpers):
-    agent_dai_before = dai_token.balanceOf(lido_dao_agent_address)
     dai_amount = 10**18
 
     helpers.fund_with_dai(whitelist, dai_amount)
 
-    with reverts():
+    with reverts("zero token address"):
         whitelist.recover_erc20(ZERO_ADDRESS, dai_amount, sender=stranger)
