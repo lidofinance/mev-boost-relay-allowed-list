@@ -229,7 +229,9 @@ def _find_relay(uri: String[MAX_STRING_LENGTH]) -> uint256:
 @internal
 def _check_sender_is_lido_agent_or_manager():
     assert (
-        msg.sender == LIDO_DAO_AGENT or msg.sender == self.manager
+        msg.sender == LIDO_DAO_AGENT
+        or
+        (msg.sender == self.manager and msg.sender != empty(address))
     ), "msg.sender not lido agent or manager"
 
 

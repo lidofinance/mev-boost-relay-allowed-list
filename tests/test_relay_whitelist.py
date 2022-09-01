@@ -2,7 +2,7 @@
 Tests for MEV Boost Relays Whitelist
 """
 
-from ape import reverts, project
+from ape import reverts, project, accounts
 from ape.managers.converters import HexConverter
 from conftest import (
     assert_single_event,
@@ -91,6 +91,13 @@ def test_manager_can_remove_relay(whitelist, lido_agent, lido_easy_track_script_
 
     with reverts("msg.sender not lido agent or manager"):
         whitelist.remove_relay(TEST_RELAY0.uri, sender=lido_easy_track_script_executor)
+
+
+def test_zero_msg_sender_as_manager(whitelist):
+    assert whitelist.get_manager() == ZERO_ADDRESS
+
+    with reverts("msg.sender not lido agent or manager"):
+        whitelist.add_relay(*TEST_RELAY0, sender=accounts[ZERO_ADDRESS])
 
 
 @suppress_3rd_party_deprecation_warnings
