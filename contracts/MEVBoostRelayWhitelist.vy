@@ -56,6 +56,7 @@ LIDO_DAO_AGENT: immutable(address)
 
 # Manager can change the whitelist as well as Lido DAO
 # Can be assigned and dismissed by Lido DAO
+# Zero manager means manager is not assigned
 manager: address
 
 # List of the relays. Order might be arbutrary
