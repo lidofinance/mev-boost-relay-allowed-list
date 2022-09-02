@@ -9,9 +9,12 @@ from ape.api.transactions import ReceiptAPI
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from config import (
-    dai_token_address,
     lido_dao_agent_address,
     lido_easy_track_script_executor_address,
+    dai_token_address,
+    dai_token_holder_address,
+    usdt_token_address,
+    usdt_token_holder_address,
 )
 
 
@@ -59,6 +62,11 @@ def dai_token():
     return project.Dai.at(dai_token_address)
 
 
+@pytest.fixture(scope="module")
+def usdt_token():
+    return project.Usdt.at(usdt_token_address)
+
+
 def assert_single_event(receipt: ReceiptAPI, event: ContractEvent, args: dict):
     logs: list[ContractLog] = list(event.from_receipt(receipt))
     assert len(logs) == 1, f"event '{event.name}' must exist and be single"
@@ -67,14 +75,23 @@ def assert_single_event(receipt: ReceiptAPI, event: ContractEvent, args: dict):
 
 class Helpers:
     dai_token = None
+    usdt_token = None
 
     @staticmethod
-    def fund_with_dai(addr, amount):
-        dai_holder = accounts["0x075e72a5edf65f0a5f44699c7654c1a76941ddc8"]
-        Helpers.dai_token.transfer(addr, amount, sender=dai_holder)
+    def fund_with_dai(address, amount):
+        dai_holder = accounts[dai_token_holder_address]
+        assert Helpers.dai_token.balanceOf(dai_holder) >= amount
+        Helpers.dai_token.transfer(address, amount, sender=dai_holder)
+
+    @staticmethod
+    def fund_with_usdt(address, amount):
+        usdt_holder = accounts[usdt_token_holder_address]
+        assert Helpers.usdt_token.balanceOf(usdt_holder) >= amount
+        Helpers.usdt_token.transfer(address, amount, sender=usdt_holder)
 
 
 @pytest.fixture(scope="module")
-def helpers(dai_token):
+def helpers(dai_token, usdt_token):
     Helpers.dai_token = dai_token
+    Helpers.usdt_token = usdt_token
     return Helpers
