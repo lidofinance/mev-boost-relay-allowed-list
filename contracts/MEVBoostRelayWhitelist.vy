@@ -105,10 +105,11 @@ def get_relays() -> DynArray[Relay, MAX_NUM_RELAYS]:
 
 @view
 @external
-def is_whitelisted(relay_uri: String[MAX_STRING_LENGTH]) -> bool:
-    """Check if relay with the uri is whitelisted"""
+def get_relay_by_uri(relay_uri: String[MAX_STRING_LENGTH]) -> Relay:
+    """Find whitelisted relay by URI. Revert if no relay found"""
     index: uint256 = self._find_relay(relay_uri)
-    return index != max_value(uint256)
+    assert index != max_value(uint256), "no relay with the URI"
+    return self.relays[index]
 
 
 @view

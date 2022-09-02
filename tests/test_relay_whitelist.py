@@ -55,13 +55,16 @@ def test_add_relay(whitelist, lido_agent):
     assert_single_event(
         receipt, whitelist.RelayAdded, {"relay": TEST_RELAY0, "uri_hash": TEST_RELAY0_URI_HASH}
     )
+    assert_single_event(receipt, whitelist.RelaysUpdated, {"whitelist_version": 1})
     relays = whitelist.get_relays()
     assert relays == list(TEST_RELAY0)
     assert whitelist.get_whitelist_version() == 1
 
-    assert whitelist.is_whitelisted(TEST_RELAY0.uri)
-    assert not whitelist.is_whitelisted(TEST_RELAY1.uri)
-    assert not whitelist.is_whitelisted("")
+    assert whitelist.get_relay_by_uri(TEST_RELAY0.uri) == TEST_RELAY0
+    with reverts("no relay with the URI"):
+        whitelist.get_relay_by_uri(TEST_RELAY1.uri)
+    with reverts("no relay with the URI"):
+        whitelist.get_relay_by_uri("")
 
 
 def test_manager_can_add_relay(whitelist, lido_agent, lido_easy_track_script_executor):
@@ -80,15 +83,18 @@ def test_manager_can_add_relay(whitelist, lido_agent, lido_easy_track_script_exe
 
 
 def test_manager_can_remove_relay(whitelist, lido_agent, lido_easy_track_script_executor):
-    whitelist.add_relay(*TEST_RELAY0, sender=lido_agent)
+    receipt = whitelist.add_relay(*TEST_RELAY0, sender=lido_agent)
+    assert_single_event(receipt, whitelist.RelaysUpdated, {"whitelist_version": 1})
 
     with reverts("msg.sender not lido agent or manager"):
         whitelist.remove_relay(TEST_RELAY0.uri, sender=lido_easy_track_script_executor)
     whitelist.set_manager(lido_easy_track_script_executor, sender=lido_agent)
 
-    whitelist.remove_relay(TEST_RELAY0.uri, sender=lido_easy_track_script_executor)
+    receipt = whitelist.remove_relay(TEST_RELAY0.uri, sender=lido_easy_track_script_executor)
     assert whitelist.get_relays() == None
-    whitelist.add_relay(*TEST_RELAY0, sender=lido_agent)
+    assert_single_event(receipt, whitelist.RelaysUpdated, {"whitelist_version": 2})
+    receipt = whitelist.add_relay(*TEST_RELAY0, sender=lido_agent)
+    assert_single_event(receipt, whitelist.RelaysUpdated, {"whitelist_version": 3})
 
     whitelist.dismiss_manager(sender=lido_agent)
     assert whitelist.get_manager() == ZERO_ADDRESS
@@ -144,8 +150,8 @@ def test_remove_relay_with_empty_uri(whitelist, lido_agent):
 def test_remove_relay_when_no_such_relays(whitelist, lido_agent):
     whitelist.add_relay(*TEST_RELAY0, sender=lido_agent)
     whitelist.add_relay(*TEST_RELAY1, sender=lido_agent)
-    assert whitelist.is_whitelisted(TEST_RELAY0.uri)
-    assert whitelist.is_whitelisted(TEST_RELAY1.uri)
+    assert whitelist.get_relay_by_uri(TEST_RELAY0.uri) == TEST_RELAY0
+    assert whitelist.get_relay_by_uri(TEST_RELAY1.uri) == TEST_RELAY1
     with reverts("no relay with the URI"):
         whitelist.remove_relay("non-presenting uri", sender=lido_agent)
 
@@ -196,9 +202,12 @@ def test_remove_middle_relay(whitelist, lido_agent):
     whitelist.remove_relay("uri #7", sender=lido_agent)
     test_relays[7] = test_relays.pop()
 
-    assert whitelist.is_whitelisted("uri #6")
-    assert not whitelist.is_whitelisted("uri #7")
-    assert whitelist.is_whitelisted("uri #8")
+    assert whitelist.get_relay_by_uri("uri #6") == Relay("uri #6", "", False, "")
+
+    with reverts("no relay with the URI"):
+        assert whitelist.get_relay_by_uri("uri #7")
+
+    assert whitelist.get_relay_by_uri("uri #8") == Relay("uri #8", "", False, "")
 
     for actual, expected in zip(whitelist.get_relays(), test_relays):
         assert list(actual) == expected

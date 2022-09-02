@@ -15,6 +15,9 @@ def test_stranger_cannot_set_or_dismiss_manager(
     with reverts("msg.sender not lido agent"):
         whitelist.set_manager(lido_easy_track_script_executor, sender=stranger)
 
+    with reverts("msg.sender not lido agent"):
+        whitelist.dismiss_manager(sender=stranger)
+
 
 def test_manager_cannot_update_or_dismiss_manager(
     whitelist, lido_agent, lido_easy_track_script_executor, stranger
