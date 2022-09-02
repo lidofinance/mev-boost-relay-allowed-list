@@ -50,15 +50,15 @@ MAX_STRING_LENGTH: constant(uint256) = 1024
 # Just some sane limit
 MAX_NUM_RELAYS: constant(uint256) = 40
 
-# Hardcoded owner of the contract
+# Can change the relays and change the manager
 LIDO_DAO_AGENT: immutable(address)
 
-# Manager can change the whitelist as well as Lido DAO
-# Can be assigned and dismissed by Lido DAO
+# Manager can change the whitelist as well as Lido DAO Agent
+# Can be assigned and dismissed by Lido DAO Agent
 # Zero manager means manager is not assigned
 manager: address
 
-# List of the relays. Order might be arbutrary
+# List of the relays. Order might be arbitrary
 relays: DynArray[Relay, MAX_NUM_RELAYS]
 
 # Incremented each time the list of relays is modified.
@@ -129,8 +129,8 @@ def add_relay(
     description: String[MAX_STRING_LENGTH]
 ):
     """
-    @notice Add relay to the whitelist. Can be executed only by the Lido Agent.
-            Reverts if relay with the URI is already whitelisted.
+    @notice Add relay to the whitelist. Can be executed only by Lido DAO Agent or
+            manager. Reverts if relay with the URI is already whitelisted.
     @param uri URI of the relay. Must be non-empty
     @param operator Name of the relay operator
     @param is_mandatory If the relay is mandatory for usage for Lido Node Operator
@@ -157,8 +157,9 @@ def add_relay(
 @external
 def remove_relay(uri: String[MAX_STRING_LENGTH]):
     """
-    @notice Add relay to the whitelist. Can be executed only by the Lido Agent.
-            Reverts if there is no such relay. Order of the relays might get changed.
+    @notice Add relay to the whitelist. Can be executed only by the Lido DAO Agent or
+            manager. Reverts if there is no such relay.
+            Order of the relays might get changed.
     @param uri URI of the relay. Must be non-empty
     """
     self._check_sender_is_lido_agent_or_manager()
@@ -182,10 +183,10 @@ def set_manager(manager: address):
     """
     @notice Set contract manager. Zero address is not allowed.
             Can update manager if it is already set.
-            Can be called only by Lido DAO.
+            Can be called only by Lido DAO Agent.
     @param manager Address of the new manager
     """
-    self._check_sender_is_lido()
+    self._check_sender_is_lido_agent()
     assert manager != empty(address), "zero manager address"
     assert manager != self.manager, "same manager"
 
@@ -197,9 +198,9 @@ def set_manager(manager: address):
 def dismiss_manager():
     """
     @notice Dismiss the manager. Reverts if no manager set.
-            Can be called only by Lido DAO.
+            Can be called only by Lido DAO Agent.
     """
-    self._check_sender_is_lido()
+    self._check_sender_is_lido_agent()
     assert self.manager != empty(address), "no manager set"
 
     self.manager = empty(address)
@@ -246,7 +247,7 @@ def _check_sender_is_lido_agent_or_manager():
 
 
 @internal
-def _check_sender_is_lido():
+def _check_sender_is_lido_agent():
     assert msg.sender == LIDO_DAO_AGENT, "msg.sender not lido agent"
 
 
