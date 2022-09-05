@@ -38,15 +38,15 @@ TEST_RELAY1_URI_HASH = HexConverter().convert(
 
 
 def test_zero_lido_agent(deployer):
-    with reverts("zero lido agent address"):
+    with reverts("zero owner address"):
         project.MEVBoostRelayWhitelist.deploy(ZERO_ADDRESS, sender=deployer)
 
 
-def test_initial_state(whitelist):
+def test_initial_state(whitelist, lido_agent):
     assert whitelist.get_relays_amount() == 0
     assert whitelist.get_whitelist_version() == 0
     assert whitelist.get_relays() is None, "must have 0 relays initially"
-    assert whitelist.get_lido_dao_agent() == lido_dao_agent_address
+    assert whitelist.get_owner() == lido_agent
     assert whitelist.get_manager() == ZERO_ADDRESS
 
 
@@ -68,7 +68,7 @@ def test_add_relay(whitelist, lido_agent):
 
 
 def test_manager_can_add_relay(whitelist, lido_agent, lido_easy_track_script_executor):
-    with reverts("msg.sender not lido agent or manager"):
+    with reverts("msg.sender not owner or manager"):
         whitelist.add_relay(*TEST_RELAY0, sender=lido_easy_track_script_executor)
     whitelist.set_manager(lido_easy_track_script_executor, sender=lido_agent)
 
@@ -78,7 +78,7 @@ def test_manager_can_add_relay(whitelist, lido_agent, lido_easy_track_script_exe
     whitelist.dismiss_manager(sender=lido_agent)
     assert whitelist.get_manager() == ZERO_ADDRESS
 
-    with reverts("msg.sender not lido agent or manager"):
+    with reverts("msg.sender not owner or manager"):
         whitelist.add_relay(*TEST_RELAY0, sender=lido_easy_track_script_executor)
 
 
@@ -86,7 +86,7 @@ def test_manager_can_remove_relay(whitelist, lido_agent, lido_easy_track_script_
     receipt = whitelist.add_relay(*TEST_RELAY0, sender=lido_agent)
     assert_single_event(receipt, whitelist.RelaysUpdated, {"whitelist_version": 1})
 
-    with reverts("msg.sender not lido agent or manager"):
+    with reverts("msg.sender not owner or manager"):
         whitelist.remove_relay(TEST_RELAY0.uri, sender=lido_easy_track_script_executor)
     whitelist.set_manager(lido_easy_track_script_executor, sender=lido_agent)
 
@@ -99,14 +99,14 @@ def test_manager_can_remove_relay(whitelist, lido_agent, lido_easy_track_script_
     whitelist.dismiss_manager(sender=lido_agent)
     assert whitelist.get_manager() == ZERO_ADDRESS
 
-    with reverts("msg.sender not lido agent or manager"):
+    with reverts("msg.sender not owner or manager"):
         whitelist.remove_relay(TEST_RELAY0.uri, sender=lido_easy_track_script_executor)
 
 
 def test_zero_msg_sender_as_manager(whitelist):
     assert whitelist.get_manager() == ZERO_ADDRESS
 
-    with reverts("msg.sender not lido agent or manager"):
+    with reverts("msg.sender not owner or manager"):
         whitelist.add_relay(*TEST_RELAY0, sender=accounts[ZERO_ADDRESS])
 
 
@@ -215,16 +215,16 @@ def test_remove_middle_relay(whitelist, lido_agent):
 
 
 @suppress_3rd_party_deprecation_warnings
-def test_stranger_cannot_add_relay(whitelist, lido_agent, stranger):
-    assert whitelist.get_lido_dao_agent() == lido_agent
+def test_stranger_cannot_add_relay(whitelist, stranger):
+    assert whitelist.get_owner() != stranger
 
-    with reverts("msg.sender not lido agent or manager"):
+    with reverts("msg.sender not owner or manager"):
         whitelist.add_relay(*TEST_RELAY0, sender=stranger)
 
 
 @suppress_3rd_party_deprecation_warnings
-def test_stranger_cannot_remove_relay(whitelist, lido_agent, stranger):
-    assert whitelist.get_lido_dao_agent() == lido_agent
+def test_stranger_cannot_remove_relay(whitelist, stranger):
+    assert whitelist.get_owner() != stranger
 
-    with reverts("msg.sender not lido agent or manager"):
+    with reverts("msg.sender not owner or manager"):
         whitelist.remove_relay("arbitrary uri", sender=stranger)

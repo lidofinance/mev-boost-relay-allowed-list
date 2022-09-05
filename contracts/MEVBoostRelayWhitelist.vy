@@ -21,13 +21,16 @@ event RelayRemoved:
 event RelaysUpdated:
     whitelist_version: indexed(uint256)
 
-# Emitted when contract manager is set or dismissed
-# When dismissed the address is zero
+# Emitted when the contract owner is changed
+event OwnerChanged:
+    new_owner: indexed(address)
+
+# Emitted when the contract manager is set or dismissed
+# When the manager is dismissed the address is zero
 event ManagerChanged:
     new_manager: indexed(address)
 
-
-# The ERC20 token was transferred from the contract's address to the Lido treasury address
+# The ERC20 token was transferred from the contract to the recipient
 event ERC20Recovered:
     # the address calling `recover_erc20` function
     requested_by: indexed(address)
@@ -35,6 +38,8 @@ event ERC20Recovered:
     token: indexed(address)
     # the token amount
     amount: uint256
+    # recipient of the recovery token transfer
+    recipient: address
 
 
 struct Relay:
@@ -50,11 +55,11 @@ MAX_STRING_LENGTH: constant(uint256) = 1024
 # Just some sane limit
 MAX_NUM_RELAYS: constant(uint256) = 40
 
-# Can change the relays and change the manager
-LIDO_DAO_AGENT: immutable(address)
+# Can change the whitelist, change the manager and call recovery functions
+owner: address
 
-# Manager can change the whitelist as well as Lido DAO Agent
-# Can be assigned and dismissed by Lido DAO Agent
+# Manager can change the whitelist as well as the owner
+# Can be assigned and dismissed by the owner
 # Zero manager means manager is not assigned
 manager: address
 
@@ -67,16 +72,9 @@ whitelist_version: uint256
 
 
 @external
-def __init__(lido_agent: address):
-    assert lido_agent != empty(address), "zero lido agent address"
-    LIDO_DAO_AGENT = lido_agent
-
-
-@view
-@external
-def get_lido_dao_agent() -> address:
-    """Return the address of Lido DAO Agent contract"""
-    return LIDO_DAO_AGENT
+def __init__(owner: address):
+    assert owner != empty(address), "zero owner address"
+    self.owner = owner
 
 
 @view
@@ -87,6 +85,13 @@ def get_relays_amount() -> uint256:
     @return The number of the whitelisted relays
     """
     return len(self.relays)
+
+
+@view
+@external
+def get_owner() -> address:
+    """Return the address of owner of the contract"""
+    return self.owner
 
 
 @view
@@ -130,14 +135,14 @@ def add_relay(
     description: String[MAX_STRING_LENGTH]
 ):
     """
-    @notice Add relay to the whitelist. Can be executed only by Lido DAO Agent or
+    @notice Add relay to the whitelist. Can be executed only by the owner or
             manager. Reverts if relay with the URI is already whitelisted.
     @param uri URI of the relay. Must be non-empty
     @param operator Name of the relay operator
     @param is_mandatory If the relay is mandatory for usage for Lido Node Operator
     @param description Description of the relay in free format
     """
-    self._check_sender_is_lido_agent_or_manager()
+    self._check_sender_is_owner_or_manager()
     assert uri != empty(String[MAX_STRING_LENGTH]), "relay URI must not be empty"
 
     index: uint256 = self._find_relay(uri)
@@ -158,12 +163,12 @@ def add_relay(
 @external
 def remove_relay(uri: String[MAX_STRING_LENGTH]):
     """
-    @notice Add relay to the whitelist. Can be executed only by the Lido DAO Agent or
+    @notice Add relay to the whitelist. Can be executed only by the the owner or
             manager. Reverts if there is no such relay.
             Order of the relays might get changed.
     @param uri URI of the relay. Must be non-empty
     """
-    self._check_sender_is_lido_agent_or_manager()
+    self._check_sender_is_owner_or_manager()
     assert uri != empty(String[MAX_STRING_LENGTH]), "relay URI must not be empty"
 
     num_relays: uint256 = len(self.relays)
@@ -180,14 +185,29 @@ def remove_relay(uri: String[MAX_STRING_LENGTH]):
 
 
 @external
+def change_owner(owner: address):
+    """
+    @notice Change contract owner.
+    @param owner Address of the new manager. Must be non-zero and
+           not same as the current owner.
+    """
+    self._check_sender_is_owner()
+    assert owner != empty(address), "zero owner address"
+    assert owner != self.owner, "same owner"
+
+    self.owner = owner
+    log OwnerChanged(owner)
+
+
+@external
 def set_manager(manager: address):
     """
     @notice Set contract manager. Zero address is not allowed.
             Can update manager if it is already set.
-            Can be called only by Lido DAO Agent.
+            Can be called only by the owner.
     @param manager Address of the new manager
     """
-    self._check_sender_is_lido_agent()
+    self._check_sender_is_owner()
     assert manager != empty(address), "zero manager address"
     assert manager != self.manager, "same manager"
 
@@ -199,9 +219,9 @@ def set_manager(manager: address):
 def dismiss_manager():
     """
     @notice Dismiss the manager. Reverts if no manager set.
-            Can be called only by Lido DAO Agent.
+            Can be called only by the owner.
     """
-    self._check_sender_is_lido_agent()
+    self._check_sender_is_owner()
     assert self.manager != empty(address), "no manager set"
 
     self.manager = empty(address)
@@ -209,14 +229,20 @@ def dismiss_manager():
 
 
 @external
-def recover_erc20(token: address, amount: uint256):
+def recover_erc20(token: address, amount: uint256, recipient: address):
     """
     @notice Transfer ERC20 tokens from the contract's balance to the DAO treasury.
+    @param token Address of the token to recover. Must be non-zero
+    @param amount Amount of the token to recover
+    @param recipient Recipient of the token transfer. Must be non-zero
     """
+    self._check_sender_is_owner()
     assert token != empty(address), "zero token address"
+    assert recipient != empty(address), "zero recipient address"
+
     if amount > 0:
-        self._safe_erc20_transfer(token, LIDO_DAO_AGENT, amount)
-        log ERC20Recovered(msg.sender, token, amount)
+        self._safe_erc20_transfer(token, recipient, amount)
+        log ERC20Recovered(msg.sender, token, amount, recipient)
 
 
 @external
@@ -239,17 +265,17 @@ def _find_relay(uri: String[MAX_STRING_LENGTH]) -> uint256:
 
 
 @internal
-def _check_sender_is_lido_agent_or_manager():
+def _check_sender_is_owner_or_manager():
     assert (
-        msg.sender == LIDO_DAO_AGENT
+        msg.sender == self.owner
         or
         (msg.sender == self.manager and msg.sender != empty(address))
-    ), "msg.sender not lido agent or manager"
+    ), "msg.sender not owner or manager"
 
 
 @internal
-def _check_sender_is_lido_agent():
-    assert msg.sender == LIDO_DAO_AGENT, "msg.sender not lido agent"
+def _check_sender_is_owner():
+    assert msg.sender == self.owner, "msg.sender not owner"
 
 
 @internal
@@ -260,12 +286,12 @@ def _bump_version():
 
 
 @internal
-def _safe_erc20_transfer(token: address, to: address, amount: uint256):
+def _safe_erc20_transfer(token: address, recipient: address, amount: uint256):
     response: Bytes[32] = raw_call(
         token,
         concat(
             method_id("transfer(address,uint256)"),
-            convert(to, bytes32),
+            convert(recipient, bytes32),
             convert(amount, bytes32)
         ),
         max_outsize=32
