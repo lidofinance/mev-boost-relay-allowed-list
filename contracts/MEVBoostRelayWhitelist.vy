@@ -32,8 +32,6 @@ event ManagerChanged:
 
 # The ERC20 token was transferred from the contract to the recipient
 event ERC20Recovered:
-    # the address calling `recover_erc20` function
-    requested_by: indexed(address)
     # the token address
     token: indexed(address)
     # the token amount
@@ -232,6 +230,7 @@ def dismiss_manager():
 def recover_erc20(token: address, amount: uint256, recipient: address):
     """
     @notice Transfer ERC20 tokens from the contract's balance to the DAO treasury.
+            Can be called only by the owner.
     @param token Address of the token to recover. Must be non-zero
     @param amount Amount of the token to recover
     @param recipient Recipient of the token transfer. Must be non-zero
@@ -242,7 +241,7 @@ def recover_erc20(token: address, amount: uint256, recipient: address):
 
     if amount > 0:
         self._safe_erc20_transfer(token, recipient, amount)
-        log ERC20Recovered(msg.sender, token, amount, recipient)
+        log ERC20Recovered(token, amount, recipient)
 
 
 @external
