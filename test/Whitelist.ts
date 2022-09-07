@@ -3,15 +3,15 @@ import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { MaxUint256 } from '@ethersproject/constants';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { MEVBoostRelayWhitelist } from '../typechain-types';
+import { MEVBoostAllowedRelaysList } from '../typechain-types';
 
 interface Fixture {
-  contract: MEVBoostRelayWhitelist;
+  contract: MEVBoostAllowedRelaysList;
   accounts: SignerWithAddress[];
   relays: string[];
 }
 
-describe('MEV-Boost relays whitelist', () => {
+describe('MEV-Boost allowed relays list', () => {
   const deployContractFixture = async (): Promise<Fixture> => {
     const accounts = await ethers.getSigners();
     const relays = [
@@ -20,8 +20,8 @@ describe('MEV-Boost relays whitelist', () => {
       'https://0xb5246e299aeb782fbc7c91b41b3284245b1ed5206134b0028b81dfb974e5900616c67847c2354479934fc4bb75519ee1@three.mev-boost-relays.test',
     ];
 
-    const WhitelistFactory = await ethers.getContractFactory('MEVBoostRelayWhitelist');
-    const contract = await WhitelistFactory.deploy();
+    const AllowedListFactory = await ethers.getContractFactory('MEVBoostAllowedRelaysList');
+    const contract = await AllowedListFactory.deploy();
 
     return { contract, accounts, relays };
   };

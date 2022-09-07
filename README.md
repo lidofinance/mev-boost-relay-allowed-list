@@ -1,6 +1,6 @@
-# MEV-Boost relay whitelist
+# MEV-Boost allowed relays list
 
-MEV-Boost relay whitelist is a simple contract storing a list of relays that have been approved by DAO for use in [MEV-Boost](https://github.com/flashbots/mev-boost). The data from the contract are used to generate a configuration file that contains a list of relays that should be connected to.
+MEV-Boost allowed relays list is a simple contract storing a list of relays that have been approved by DAO for use in [MEV-Boost](https://github.com/flashbots/mev-boost). The data from the contract are used to generate a configuration file that contains a list of relays that should be connected to.
 
 ## Install dependencies
 

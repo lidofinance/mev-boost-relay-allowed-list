@@ -6,16 +6,16 @@ pragma solidity ^0.8.0;
 import '@openzeppelin/contracts/access/Ownable.sol';
 
 /**
- * @notice Storage of the whitelisted MEB-Boost relays
+ * @notice Storage of the allowed MEV-Boost relays
  */
-contract MEVBoostRelayWhitelist is Ownable {
+contract MEVBoostAllowedRelaysList is Ownable {
     string[] internal _relays;
 
     event RelayAdded(string uri);
     event RelayRemoved(string uri, uint256 index);
 
     /**
-     * @notice Returns an unordered array of whitelisted relay URIs
+     * @notice Returns an unordered array of allowed relay URIs
      * @return The relay URIs array
      */
     function getRelays() public view returns (string[] memory) {
@@ -23,7 +23,7 @@ contract MEVBoostRelayWhitelist is Ownable {
     }
 
     /**
-     * @notice Returns the length of the array of whitelisted relay URIs
+     * @notice Returns the length of the array of allowed relay URIs
      * @return Length of the relay URIs array
      */
     function getRelaysLength() public view returns (uint256) {
@@ -31,7 +31,7 @@ contract MEVBoostRelayWhitelist is Ownable {
     }
 
     /**
-     * @notice Adds relay URI to the whitelist
+     * @notice Adds relay URI to the allowed list
      * @param _uri Relay URI with pubkey (e.g. https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@builder-relay-goerli.flashbots.net)
      */
     function addRelay(string memory _uri) external onlyOwner {
@@ -46,7 +46,7 @@ contract MEVBoostRelayWhitelist is Ownable {
     }
 
     /**
-     * @notice Removes relay URI from the whitelist
+     * @notice Removes relay URI from the allowed list
      * @param _index Relay URI index to be deleted in the array
      */
     function removeRelay(uint256 _index) external onlyOwner {

@@ -1,10 +1,10 @@
 import { task } from 'hardhat/config';
 
-task('deploy', 'Deploy MEV-Boost relay whitelist contract').setAction(async (taskArgs, hre) => {
+task('deploy', 'Deploy MEV-Boost allowed relays list contract').setAction(async (taskArgs, hre) => {
   const { ethers } = hre;
 
-  const WhitelistFactory = await ethers.getContractFactory('MEVBoostRelayWhitelist');
-  const contract = await WhitelistFactory.deploy();
+  const AllowedListFactory = await ethers.getContractFactory('MEVBoostAllowedRelaysList');
+  const contract = await AllowedListFactory.deploy();
 
   await contract.deployed();
   console.log('Contract deployed to:', contract.address);

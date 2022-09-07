@@ -1,5 +1,5 @@
 {
-  "name": "mev-boost-relay-whitelist",
+  "name": "mev-boost-allowed-relays-list",
   "version": "1.0.0",
   "description": "",
   "scripts": {
