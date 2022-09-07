@@ -8,6 +8,6 @@
   "license": "MIT",
   "devDependencies": {},
   "dependencies": {
-    "hardhat": "^2.10.1"
+    "hardhat": "^2.11.1"
   }
 }
