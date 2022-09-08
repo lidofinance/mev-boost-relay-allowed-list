@@ -1,6 +1,6 @@
-# MEV-Boost relay whitelist
+# MEV-Boost relay allowed list
 
-MEV-Boost relay whitelist is a simple contract storing a list of relays that have been approved by DAO for use in [MEV-Boost](https://github.com/flashbots/mev-boost). The data from the contract are used to generate a configuration file that contains a list of relays that should be connected to.
+MEV-Boost relay allowed list is a simple contract storing a list of relays that have been approved by DAO for use in [MEV-Boost](https://github.com/flashbots/mev-boost). The data from the contract are used to generate a configuration file that contains a list of relays that should be connected to.
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ poetry shell
 to initialize shell for `ape` command usage.
 
 As long as the environment shell prompt name is cumbersome you might want to call
-`export PS1="whitelist-env $ "` to make it shorter.
+`export PS1="allowed-list-env $ "` to make it shorter.
 
 ## Run tests
 

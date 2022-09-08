@@ -1,4 +1,4 @@
-name: mev-boost-relay-whitelist
+name: mev-boost-relay-allowed-list
 
 hardhat:
   fork:

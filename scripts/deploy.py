@@ -7,4 +7,4 @@ def main():
 
     deployer = get_deployer_account()
 
-    whitelist = project.MEVBoostRelayWhitelist.deploy(lido_dao_agent_address, sender=deployer)
+    allowed_list = project.MEVBoostRelayAllowedList.deploy(lido_dao_agent_address, sender=deployer)
