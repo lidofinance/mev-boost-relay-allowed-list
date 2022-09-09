@@ -1,6 +1,6 @@
 # @version 0.3.6
-# @title MEV Boost Relay Whitelist
-# @notice Storage of the whitelisted MEB-Boost relays.
+# @title MEV Boost Relay Allowed List
+# @notice Storage of the allowed list MEV-Boost relays.
 # @license MIT
 # @author Lido <info@lido.fi>
 # @dev Relay data modification is supposed to be done by remove and add,
@@ -17,9 +17,9 @@ event RelayRemoved:
     uri_hash: indexed(String[MAX_STRING_LENGTH])
     uri: String[MAX_STRING_LENGTH]
 
-# Emitted every time the whitelist is changed
+# Emitted every time the allowed list is changed
 event RelaysUpdated:
-    whitelist_version: indexed(uint256)
+    allowed_list_version: indexed(uint256)
 
 # Emitted when the contract owner is changed
 event OwnerChanged:
@@ -53,10 +53,10 @@ MAX_STRING_LENGTH: constant(uint256) = 1024
 # Just some sane limit
 MAX_NUM_RELAYS: constant(uint256) = 40
 
-# Can change the whitelist, change the manager and call recovery functions
+# Can change the allowed list, change the manager and call recovery functions
 owner: address
 
-# Manager can change the whitelist as well as the owner
+# Manager can change the allowed list as well as the owner
 # Can be assigned and dismissed by the owner
 # Zero manager means manager is not assigned
 manager: address
@@ -65,8 +65,8 @@ manager: address
 relays: DynArray[Relay, MAX_NUM_RELAYS]
 
 # Incremented each time the list of relays is modified.
-# Introduced to facilitate easy versioning of whitelist
-whitelist_version: uint256
+# Introduced to facilitate easy versioning of the allowed list
+allowed_list_version: uint256
 
 
 @external
@@ -79,8 +79,8 @@ def __init__(owner: address):
 @external
 def get_relays_amount() -> uint256:
     """
-    @notice Return number of the whitelisted relays
-    @return The number of the whitelisted relays
+    @notice Return number of the allowed relays
+    @return The number of the allowed relays
     """
     return len(self.relays)
 
@@ -102,14 +102,14 @@ def get_manager() -> address:
 @view
 @external
 def get_relays() -> DynArray[Relay, MAX_NUM_RELAYS]:
-    """Return list of the whitelisted relays"""
+    """Return list of the allowed relays"""
     return self.relays
 
 
 @view
 @external
 def get_relay_by_uri(relay_uri: String[MAX_STRING_LENGTH]) -> Relay:
-    """Find whitelisted relay by URI. Revert if no relay found"""
+    """Find allowed relay by URI. Revert if no relay found"""
     index: uint256 = self._find_relay(relay_uri)
     assert index != max_value(uint256), "no relay with the URI"
     return self.relays[index]
@@ -117,12 +117,12 @@ def get_relay_by_uri(relay_uri: String[MAX_STRING_LENGTH]) -> Relay:
 
 @view
 @external
-def get_whitelist_version() -> uint256:
+def get_allowed_list_version() -> uint256:
     """
-    @notice Return version of the whitelist
+    @notice Return version of the allowed list
     @dev The version is incremented on every relays list update
     """
-    return self.whitelist_version
+    return self.allowed_list_version
 
 
 @external
@@ -133,8 +133,8 @@ def add_relay(
     description: String[MAX_STRING_LENGTH]
 ):
     """
-    @notice Add relay to the whitelist. Can be executed only by the owner or
-            manager. Reverts if relay with the URI is already whitelisted.
+    @notice Add relay to the allowed list. Can be executed only by the owner or
+            manager. Reverts if relay with the URI is already allowed.
     @param uri URI of the relay. Must be non-empty
     @param operator Name of the relay operator
     @param is_mandatory If the relay is mandatory for usage for Lido Node Operator
@@ -161,7 +161,7 @@ def add_relay(
 @external
 def remove_relay(uri: String[MAX_STRING_LENGTH]):
     """
-    @notice Add relay to the whitelist. Can be executed only by the the owner or
+    @notice Add relay to the allowed list. Can be executed only by the the owner or
             manager. Reverts if there is no such relay.
             Order of the relays might get changed.
     @param uri URI of the relay. Must be non-empty
@@ -279,8 +279,8 @@ def _check_sender_is_owner():
 
 @internal
 def _bump_version():
-   new_version: uint256 = self.whitelist_version + 1
-   self.whitelist_version = new_version
+   new_version: uint256 = self.allowed_list_version + 1
+   self.allowed_list_version = new_version
    log RelaysUpdated(new_version)
 
 

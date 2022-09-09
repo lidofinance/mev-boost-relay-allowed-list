@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "mev-boost-relay-whitelist"
+name = "mev-boost-relay-allowed-list"
 version = "0.1.0"
 description = "Contract storing a list of MEV boost relays approved by Lido DAO"
 authors = ["Lido dev team"]

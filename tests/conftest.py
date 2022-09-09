@@ -53,8 +53,8 @@ def lido_easy_track_script_executor():
 
 
 @pytest.fixture()
-def whitelist(deployer):
-    return project.MEVBoostRelayWhitelist.deploy(lido_dao_agent_address, sender=deployer)
+def allowed_list(deployer):
+    return project.MEVBoostRelayAllowedList.deploy(lido_dao_agent_address, sender=deployer)
 
 
 @pytest.fixture(scope="module")
