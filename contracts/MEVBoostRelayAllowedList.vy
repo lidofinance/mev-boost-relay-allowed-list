@@ -18,7 +18,7 @@ event RelayRemoved:
     uri: String[MAX_STRING_LENGTH]
 
 # Emitted every time the allowed list is changed
-event RelaysUpdated:
+event AllowedListUpdated:
     allowed_list_version: indexed(uint256)
 
 # Emitted when the contract owner is changed
@@ -37,7 +37,7 @@ event ERC20Recovered:
     # the token amount
     amount: uint256
     # recipient of the recovery token transfer
-    recipient: address
+    recipient: indexed(address)
 
 
 struct Relay:
@@ -142,6 +142,7 @@ def add_relay(
     """
     self._check_sender_is_owner_or_manager()
     assert uri != empty(String[MAX_STRING_LENGTH]), "relay URI must not be empty"
+    assert len(self.relays) < MAX_NUM_RELAYS, "already max number of relays"
 
     index: uint256 = self._find_relay(uri)
     assert index == max_value(uint256), "relay with the URI already exists"
@@ -161,7 +162,7 @@ def add_relay(
 @external
 def remove_relay(uri: String[MAX_STRING_LENGTH]):
     """
-    @notice Add relay to the allowed list. Can be executed only by the the owner or
+    @notice Remove relay from the allowed list. Can be executed only by the the owner or
             manager. Reverts if there is no such relay.
             Order of the relays might get changed.
     @param uri URI of the relay. Must be non-empty
@@ -186,7 +187,7 @@ def remove_relay(uri: String[MAX_STRING_LENGTH]):
 def change_owner(owner: address):
     """
     @notice Change contract owner.
-    @param owner Address of the new manager. Must be non-zero and
+    @param owner Address of the new owner. Must be non-zero and
            not same as the current owner.
     """
     self._check_sender_is_owner()
@@ -229,7 +230,7 @@ def dismiss_manager():
 @external
 def recover_erc20(token: address, amount: uint256, recipient: address):
     """
-    @notice Transfer ERC20 tokens from the contract's balance to the DAO treasury.
+    @notice Transfer ERC20 tokens from the contract's balance to the recipient.
             Can be called only by the owner.
     @param token Address of the token to recover. Must be non-zero
     @param amount Amount of the token to recover
@@ -238,6 +239,7 @@ def recover_erc20(token: address, amount: uint256, recipient: address):
     self._check_sender_is_owner()
     assert token != empty(address), "zero token address"
     assert recipient != empty(address), "zero recipient address"
+    assert token.is_contract, "eoa token address"
 
     if amount > 0:
         self._safe_erc20_transfer(token, recipient, amount)
@@ -281,7 +283,7 @@ def _check_sender_is_owner():
 def _bump_version():
    new_version: uint256 = self.allowed_list_version + 1
    self.allowed_list_version = new_version
-   log RelaysUpdated(new_version)
+   log AllowedListUpdated(new_version)
 
 
 @internal

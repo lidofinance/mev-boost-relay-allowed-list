@@ -93,3 +93,16 @@ def test_recover_erc20_failure_due_zero_token_address(allowed_list, stranger, he
 
     with reverts("zero token address"):
         allowed_list.recover_erc20(ZERO_ADDRESS, dai_amount, stranger, sender=lido_agent)
+
+
+def test_recover_erc20_with_incorrect_eoa_token_address(allowed_list, stranger, lido_agent):
+    eoa = stranger
+    with reverts("eoa token address"):
+        allowed_list.recover_erc20(eoa, 10**18, stranger, sender=lido_agent)
+
+
+def test_recover_erc20_with_incorrect_non_token_token_address(allowed_list, stranger, lido_agent):
+    non_token_contract = allowed_list.address
+
+    with reverts():
+        allowed_list.recover_erc20(non_token_contract, 10**18, stranger, sender=lido_agent)
