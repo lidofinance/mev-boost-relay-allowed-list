@@ -8,6 +8,9 @@ typechain-types
 .vscode
 .build
 
+# MacOS folder view attributes
+**/.DS_Store
+
 # Ape auto-generated files
 hardhat.config.js
 
