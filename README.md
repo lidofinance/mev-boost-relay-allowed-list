@@ -1,57 +1,51 @@
-# MEV-Boost relay whitelist
+# MEV-Boost relay allowed list
 
-MEV-Boost relay whitelist is a simple contract storing a list of relays that have been approved by DAO for use in [MEV-Boost](https://github.com/flashbots/mev-boost). The data from the contract are used to generate a configuration file that contains a list of relays that should be connected to.
+MEV-Boost relay allowed list is a simple contract storing a list of relays that have been approved by DAO for use in [MEV-Boost](https://github.com/flashbots/mev-boost). The data from the contract are used to generate a configuration file that contains a list of relays that should be connected to.
 
-## Install dependencies
+MEVBoostRelaysWhitelist contract documentation is in [docs/MEVBoostRelayAllowedList.md](./docs/MEVBoostRelayAllowedList.md).
+
+## Prerequisites
+
+- python >= 3.9
+- node >= 16.0
+- poetry >= 1.1.14
+
+## Setup
 
 ```shell
-npm i
+poetry install
+npm install
+export WEB3_INFURA_PROJECT_ID=<your infura project id>
 ```
+
+and run
+
+```shell
+poetry shell
+```
+
+to initialize shell for `ape` command usage.
+
+As long as the environment shell prompt name is cumbersome you might want to call
+`export PS1="allowed-list-env $ "` to make it shorter.
 
 ## Run tests
 
 ```shell
-npm run test
+ape test -s --network :mainnet-fork:hardhat
 ```
 
-## Local deploy
+The networks supported are `mainnet-fork` and `goerli-fork` for which network-specific
+configurations `config_*.py` are specified.
 
-Step 1. Compile artifacts
+## Deployment
+
+Get sure your account is imported to Ape (see `ape accounts list`).
+
+Let's assume the deploy account alias is `lido_deployer`. To deploy on mainnet fork:
 
 ```shell
-npm run compile
+DEPLOYER=lido_deployer ape run deploy --network :mainnet-fork:hardhat
 ```
 
-Step 2. Run the local node
-
-```shell
-npm run node
-```
-
-Step 3. Run the deploy script
-
-```shell
-npm run deploy localhost
-```
-
-## Network deploy
-
-Step 1. Compile artifacts
-
-```shell
-npm run compile
-```
-
-Step 2. Copy the contents of `sample.env` to `.env`
-
-```shell
-cp sample.env .env
-```
-
-Step 3. Fill out the `.env` file
-
-Step 4. Run the deploy script
-
-```shell
-npm run deploy goerli
-```
+Deployment addresses are available in files `deployed_mainnet.txt` and `deployed_goerli.txt`.

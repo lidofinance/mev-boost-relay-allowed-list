@@ -1,22 +1,63 @@
-name: Tests and checks
-on: pull_request
+name: Tests
+
+on:
+  push:
+
 jobs:
-  test:
-    name: App tests and checks
+  run-tests:
+    name: Brownie tests
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Set up node
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+
+      - name: Setup node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm i
-      - name: Compile artifacts
-        run: npm run compile
-      - name: Run checks
-        run: npm run check
+          node-version: 16.x
+
+      - name: Install poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+        env:
+          POETRY_VERSION: "1.1.14"
+
+      - name: Load cached poetry deps
+        id: cached-poetry-deps
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pypoetry
+            .venv
+          key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install poetry requirements
+        if: steps.cached-poetry-deps.outputs.cache-hit != 'true'
+        run: poetry install
+
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: node_modules-${{ hashFiles('**/package-lock.lock') }}
+          restore-keys: node_modules-${{ hashFiles('**/package-lock.lock') }}
+
+      - name: Install node dependencies
+        run: npm install
+        if: |
+          steps.cache-node-modules.outputs.cache-hit != 'true'
+
       - name: Run tests
-        run: npm run test
+        run: >
+          poetry run
+          test -s --network :mainnet-fork:hardhat
+        env:
+          WEB3_INFURA_PROJECT_ID: ${{ secrets.WEB3_INFURA_PROJECT_ID }}
+          ETHERSCAN_TOKEN: ${{ secrets.ETHERSCAN_TOKEN }}
