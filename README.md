@@ -49,3 +49,11 @@ DEPLOYER=lido_deployer ape run deploy --network :mainnet-fork:hardhat
 ```
 
 Deployment addresses are available in files `deployed_mainnet.txt` and `deployed_goerli.txt`.
+
+## Code style
+
+Please, use the shared pre-commit hooks to maintain code style:
+
+```bash
+poetry run pre-commit install
+```
