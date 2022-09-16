@@ -2,6 +2,8 @@
 
 MEV-Boost relay allowed list is a simple contract storing a list of relays that have been approved by DAO for use in [MEV-Boost](https://github.com/flashbots/mev-boost). The data from the contract are used to generate a configuration file that contains a list of relays that should be connected to.
 
+MEVBoostRelaysWhitelist contract documentation is in [docs/MEVBoostRelayAllowedList.md](./docs/MEVBoostRelayAllowedList.md).
+
 ## Prerequisites
 
 - python >= 3.9
@@ -45,3 +47,5 @@ Let's assume the deploy account alias is `lido_deployer`. To deploy on mainnet f
 ```shell
 DEPLOYER=lido_deployer ape run deploy --network :mainnet-fork:hardhat
 ```
+
+Deployment addresses are available in files `deployed_mainnet.txt` and `deployed_goerli.txt`.
