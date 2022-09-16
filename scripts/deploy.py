@@ -7,4 +7,6 @@ def main():
 
     deployer = get_deployer_account()
 
-    allowed_list = project.MEVBoostRelayAllowedList.deploy(lido_dao_agent_address, sender=deployer)
+    allowed_list = project.MEVBoostRelayAllowedList.deploy(
+        lido_dao_agent_address, sender=deployer, max_fee="300 gwei"
+    )
