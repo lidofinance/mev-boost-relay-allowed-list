@@ -15,4 +15,3 @@ hardhat:
     ethereum:
       mainnet:
         upstream_provider: infura
-

@@ -29,10 +29,15 @@ to initialize shell for `ape` command usage.
 As long as the environment shell prompt name is cumbersome you might want to call
 `export PS1="allowed-list-env $ "` to make it shorter.
 
+## Configuration
+
+The project uses configuration files in format `config_<network-name>.json`. Configuration for the required network
+is read automatically upon network variable `NETWORK` is set. Currently, `NETWORK` can be one of `mainnet`, `goerli`, `holesky`.
+
 ## Run tests
 
 ```shell
-ape test -s --network :mainnet-fork:hardhat
+NETWORK=mainnet ape test -s --network :mainnet-fork:hardhat
 ```
 
 The networks supported are `mainnet-fork` and `goerli-fork` for which network-specific
@@ -42,13 +47,23 @@ configurations `config_*.py` are specified.
 
 Get sure your account is imported to Ape (see `ape accounts list`).
 
-Let's assume the deploy account alias is `lido_deployer`. To deploy on mainnet fork:
+### Test deployment
+
+Let's assume the deploy account alias is `lido_deployer`. To deploy on mainnet fork run:
 
 ```shell
-DEPLOYER=lido_deployer ape run deploy --network :mainnet-fork:hardhat
+DEPLOYER=lido_deployer NETWORK=mainnet ape run deploy --network :mainnet-fork:hardhat
 ```
 
-Deployment addresses are available in files `deployed_mainnet.txt` and `deployed_goerli.txt`.
+### Custom RPC deployment
+
+Let's assume the deploy account alias is `lido_deployer`. To deploy on network `holesky` via custom RPC run:
+
+```shell
+DEPLOYER=lido_deployer NETWORK=holesky ape run deploy --network <RPC-URI>
+```
+
+Deployment addresses are available in files `deployed_{network-name}.txt` where `{network-name}` is name of the network.
 
 ## Code style
 
