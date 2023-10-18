@@ -1,8 +1,8 @@
-lido_dao_agent_address = "0xE92329EC7ddB11D25e25b3c21eeBf11f15eB325d"
-lido_easy_track_script_executor_address = "0x2819B65021E13CEEB9AC33E77DB32c7e64e7520D"
+LIDO_DAO_AGENT_ADDRESS = "0xE92329EC7ddB11D25e25b3c21eeBf11f15eB325d"
+LIDO_EASY_TRACK_SCRIPT_EXECUTOR_ADDRESS = "0x2819B65021E13CEEB9AC33E77DB32c7e64e7520D"
 
-dai_token_address = None
-dai_token_holder_address = None
+DAI_TOKEN_ADDRESS = None
+DAI_TOKEN_HOLDER_ADDRESS = None
 
-usdt_token_address = None
-usdt_token_holder_address = None
+USDT_TOKEN_ADDRESS = None
+USDT_TOKEN_HOLDER_ADDRESS = None
