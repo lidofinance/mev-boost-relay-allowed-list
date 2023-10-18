@@ -26,7 +26,7 @@ jobs:
           curl -sSL https://install.python-poetry.org | python3 -
           echo "$HOME/.local/bin" >> $GITHUB_PATH
         env:
-          POETRY_VERSION: "1.1.14"
+          POETRY_VERSION: "1.5.1"
 
       - name: Load cached poetry deps
         id: cached-poetry-deps
