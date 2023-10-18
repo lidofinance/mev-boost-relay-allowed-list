@@ -1,5 +1,5 @@
 from ape import accounts, project
-from config import lido_dao_agent_address, get_deployer_account, get_network_name
+from config import LIDO_DAO_AGENT_ADDRESS, get_deployer_account, get_network_name
 
 
 def main():
@@ -7,6 +7,4 @@ def main():
 
     deployer = get_deployer_account()
 
-    allowed_list = project.MEVBoostRelayAllowedList.deploy(
-        lido_dao_agent_address, sender=deployer, max_fee="300 gwei"
-    )
+    allowed_list = project.MEVBoostRelayAllowedList.deploy(LIDO_DAO_AGENT_ADDRESS, sender=deployer, max_fee="300 gwei")

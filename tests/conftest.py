@@ -9,18 +9,16 @@ from ape.api.transactions import ReceiptAPI
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from config import (
-    lido_dao_agent_address,
-    lido_easy_track_script_executor_address,
-    dai_token_address,
-    dai_token_holder_address,
-    usdt_token_address,
-    usdt_token_holder_address,
+    LIDO_DAO_AGENT_ADDRESS,
+    LIDO_EASY_TRACK_SCRIPT_EXECUTOR_ADDRESS,
+    DAI_TOKEN_ADDRESS,
+    DAI_TOKEN_HOLDER_ADDRESS,
+    USDT_TOKEN_ADDRESS,
+    USDT_TOKEN_HOLDER_ADDRESS,
 )
 
 
-suppress_3rd_party_deprecation_warnings = pytest.mark.filterwarnings(
-    "ignore:abi.decode_single().+is.+deprecated"
-)
+suppress_3rd_party_deprecation_warnings = pytest.mark.filterwarnings("ignore:abi.decode_single().+is.+deprecated")
 
 ZERO_ADDRESS: AddressType = "0x0000000000000000000000000000000000000000"
 
@@ -44,27 +42,27 @@ def stranger():
 
 @pytest.fixture(scope="module")
 def lido_agent():
-    return accounts[lido_dao_agent_address]
+    return accounts[LIDO_DAO_AGENT_ADDRESS]
 
 
 @pytest.fixture(scope="module")
 def lido_easy_track_script_executor():
-    return accounts[lido_easy_track_script_executor_address]
+    return accounts[LIDO_EASY_TRACK_SCRIPT_EXECUTOR_ADDRESS]
 
 
 @pytest.fixture()
 def allowed_list(deployer):
-    return project.MEVBoostRelayAllowedList.deploy(lido_dao_agent_address, sender=deployer)
+    return project.MEVBoostRelayAllowedList.deploy(LIDO_DAO_AGENT_ADDRESS, sender=deployer)
 
 
 @pytest.fixture(scope="module")
 def dai_token():
-    return project.Dai.at(dai_token_address)
+    return project.Dai.at(DAI_TOKEN_ADDRESS)
 
 
 @pytest.fixture(scope="module")
 def usdt_token():
-    return project.Usdt.at(usdt_token_address)
+    return project.Usdt.at(USDT_TOKEN_ADDRESS)
 
 
 def assert_single_event(receipt: ReceiptAPI, event: ContractEvent, args: dict):
@@ -79,13 +77,13 @@ class Helpers:
 
     @staticmethod
     def fund_with_dai(address, amount):
-        dai_holder = accounts[dai_token_holder_address]
+        dai_holder = accounts[DAI_TOKEN_HOLDER_ADDRESS]
         assert Helpers.dai_token.balanceOf(dai_holder) >= amount
         Helpers.dai_token.transfer(address, amount, sender=dai_holder)
 
     @staticmethod
     def fund_with_usdt(address, amount):
-        usdt_holder = accounts[usdt_token_holder_address]
+        usdt_holder = accounts[USDT_TOKEN_HOLDER_ADDRESS]
         assert Helpers.usdt_token.balanceOf(usdt_holder) >= amount
         Helpers.usdt_token.transfer(address, amount, sender=usdt_holder)
 

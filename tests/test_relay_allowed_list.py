@@ -10,7 +10,6 @@ from conftest import (
     Relay,
     ZERO_ADDRESS,
 )
-from config import lido_dao_agent_address
 
 
 MAX_RELAYS_NUM = 40  # supposed to correspond to the limit in the contract
@@ -52,9 +51,7 @@ def test_initial_state(allowed_list, lido_agent):
 
 def test_add_relay(allowed_list, lido_agent):
     receipt = allowed_list.add_relay(*TEST_RELAY0, sender=lido_agent)
-    assert_single_event(
-        receipt, allowed_list.RelayAdded, {"relay": TEST_RELAY0, "uri_hash": TEST_RELAY0_URI_HASH}
-    )
+    assert_single_event(receipt, allowed_list.RelayAdded, {"relay": TEST_RELAY0, "uri_hash": TEST_RELAY0_URI_HASH})
     assert_single_event(receipt, allowed_list.AllowedListUpdated, {"allowed_list_version": 1})
     relays = allowed_list.get_relays()
     assert relays == list(TEST_RELAY0)

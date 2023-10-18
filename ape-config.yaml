@@ -1,5 +1,15 @@
 name: mev-boost-relay-allowed-list
 
+plugins:
+  - name: hardhat
+    version: ">=0.6.13, <0.7"
+  - name: infura
+    version: ">=0.6.4, <0.7"
+  - name: etherscan
+    version: ">=0.6.10, <0.7"
+  - name: vyper
+    version: ">=0.6.11, <0.7"
+
 hardhat:
   fork:
     ethereum:
