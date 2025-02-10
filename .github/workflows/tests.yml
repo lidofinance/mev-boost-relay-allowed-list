@@ -41,6 +41,9 @@ jobs:
         if: steps.cached-poetry-deps.outputs.cache-hit != 'true'
         run: poetry install
 
+      - name: Install ape plugins
+        run: poetry run ape plugins install .
+
       - name: Cache node_modules
         id: cache-node-modules
         uses: actions/cache@v3
