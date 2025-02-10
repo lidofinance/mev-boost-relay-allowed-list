@@ -3,6 +3,15 @@ name: Tests
 on:
   push:
 
+
+#
+# TODO:
+#
+# The tests flow got outdated and broken.
+# As far as state of this repo is not active it had not
+# gotten the updated and fixes.
+#
+
 jobs:
   run-tests:
     name: Brownie tests
@@ -40,6 +49,10 @@ jobs:
       - name: Install poetry requirements
         if: steps.cached-poetry-deps.outputs.cache-hit != 'true'
         run: poetry install
+
+      # TODO: this step has not been tested and might need caching
+      # - name: Install ape plugins
+      #   run: poetry run ape plugins install .
 
       - name: Cache node_modules
         id: cache-node-modules
