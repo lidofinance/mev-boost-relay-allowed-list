@@ -4,6 +4,9 @@ MEV-Boost relay allowed list is a simple contract storing a list of relays that 
 
 MEVBoostRelaysWhitelist contract documentation is in [docs/MEVBoostRelayAllowedList.md](./docs/MEVBoostRelayAllowedList.md).
 
+**NB**. CI tests flow is disabled due to the tooling being outdated. The repo is not in an active mode thus it is not worth to maintain the flow currently.
+If you'd like to restore it, please start from [the old flow file](.github/workflows/tests.yml.disabled).
+
 ## Prerequisites
 
 - python >= 3.9
