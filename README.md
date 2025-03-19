@@ -35,7 +35,7 @@ As long as the environment shell prompt name is cumbersome you might want to cal
 ## Configuration
 
 The project uses configuration files in format `config_<network-name>.json`. Configuration for the required network
-is read automatically upon network variable `NETWORK` is set. Currently, `NETWORK` can be one of `mainnet`, `goerli`, `holesky`.
+is read automatically upon network variable `NETWORK` is set. Currently, `NETWORK` can be one of `mainnet`, `goerli`, `holesky`, `hoodi`.
 
 ## Run tests
 

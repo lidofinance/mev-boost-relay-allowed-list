@@ -8,7 +8,8 @@ NETWORK_ENV_VAR = "NETWORK"
 MAINNET = "mainnet"
 GOERLI = "goerli"
 HOLESKY = "holesky"
-SUPPORTED_NETWORKS = [MAINNET, GOERLI, HOLESKY]
+HOODI = "hoodi"
+SUPPORTED_NETWORKS = [MAINNET, GOERLI, HOLESKY, HOODI]
 
 
 def get_network_name() -> str:
@@ -29,6 +30,9 @@ elif network_name == MAINNET:
 elif network_name == HOLESKY:
     print(f"Using config_holesky.py addresses")
     from config_holesky import *
+elif network_name == HOODI:
+    print(f"Using config_hoodi.py addresses")
+    from config_hoodi import *
 else:
     assert False, f"Unknown network {network_name}"
 
