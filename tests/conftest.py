@@ -6,8 +6,9 @@ from evm_trace.geth import TraceFrame
 # anvil (foundry >= 1.0) omits gasCost in debug_traceTransaction struct logs,
 # while evm-trace of the ape 0.6 era requires it; default it to keep revert
 # message extraction working
-TraceFrame.model_fields["gas_cost"].default = 0
-TraceFrame.model_rebuild(force=True)
+if "gas_cost" in TraceFrame.model_fields:
+    TraceFrame.model_fields["gas_cost"].default = 0
+    TraceFrame.model_rebuild(force=True)
 
 from ape.utils.abi import LogInputABICollection
 
