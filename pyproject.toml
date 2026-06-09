@@ -7,10 +7,10 @@ license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.9,<3.11"
 dependencies = [
-    "eth-ape~=0.6.22",
+    "eth-ape~=0.6.27",
     # eth-keyfile (via eth-account) imports pkg_resources at runtime; poetry shipped
     # setuptools in every venv implicitly, uv does not
-    "setuptools<81",
+    "setuptools<83",
 ]
 
 [tool.uv]
@@ -30,8 +30,8 @@ dev = [
     # ape plugins from ape-config.yaml, managed by uv instead of `ape plugins install`
     "ape-foundry>=0.6.13,<0.7",
     "ape-vyper>=0.6.11,<0.7",
-    "black~=22.6.0",
-    "pre-commit~=2.19.0",
+    "black~=25.11.0",
+    "pre-commit~=4.3.0",
     "vyper==0.3.6",
 ]
 
