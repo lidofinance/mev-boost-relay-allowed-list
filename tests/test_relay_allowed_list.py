@@ -44,7 +44,7 @@ def test_zero_lido_agent(deployer):
 def test_initial_state(allowed_list, lido_agent):
     assert allowed_list.get_relays_amount() == 0
     assert allowed_list.get_allowed_list_version() == 0
-    assert allowed_list.get_relays() is None, "must have 0 relays initially"
+    assert allowed_list.get_relays() == [], "must have 0 relays initially"
     assert allowed_list.get_owner() == lido_agent
     assert allowed_list.get_manager() == ZERO_ADDRESS
 
@@ -88,7 +88,7 @@ def test_manager_can_remove_relay(allowed_list, lido_agent, lido_easy_track_scri
     allowed_list.set_manager(lido_easy_track_script_executor, sender=lido_agent)
 
     receipt = allowed_list.remove_relay(TEST_RELAY0.uri, sender=lido_easy_track_script_executor)
-    assert allowed_list.get_relays() == None
+    assert allowed_list.get_relays() == []
     assert_single_event(receipt, allowed_list.AllowedListUpdated, {"allowed_list_version": 2})
     receipt = allowed_list.add_relay(*TEST_RELAY0, sender=lido_agent)
     assert_single_event(receipt, allowed_list.AllowedListUpdated, {"allowed_list_version": 3})
