@@ -1,17 +1,18 @@
 name: mev-boost-relay-allowed-list
 
 plugins:
-  - name: hardhat
+  - name: foundry
     version: ">=0.6.13, <0.7"
-  - name: infura
-    version: ">=0.6.4, <0.7"
-  - name: etherscan
-    version: ">=0.6.10, <0.7"
   - name: vyper
     version: ">=0.6.11, <0.7"
 
-hardhat:
+geth:
+  ethereum:
+    mainnet:
+      uri: $RPC_URL
+
+foundry:
   fork:
     ethereum:
       mainnet:
-        upstream_provider: infura
+        upstream_provider: geth

@@ -1,9 +1,6 @@
-node_modules
 .env
 coverage
 coverage.json
-typechain
-typechain-types
 **/__pycache__
 .vscode
 .build
@@ -11,10 +8,6 @@ typechain-types
 # MacOS folder view attributes
 **/.DS_Store
 
-# Ape auto-generated files
-hardhat.config.js
 
-# Hardhat files
-cache
-artifacts
-
+# uv virtual environment
+.venv

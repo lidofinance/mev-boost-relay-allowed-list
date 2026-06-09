@@ -4,33 +4,19 @@ MEV-Boost relay allowed list is a simple contract storing a list of relays that 
 
 MEVBoostRelaysWhitelist contract documentation is in [docs/MEVBoostRelayAllowedList.md](./docs/MEVBoostRelayAllowedList.md).
 
-**NB**. CI tests flow is disabled due to the tooling being outdated. The repo is not in an active mode thus it is not worth to maintain the flow currently.
-If you'd like to restore it, please start from [the old flow file](.github/workflows/tests.yml.disabled).
-
 ## Prerequisites
 
-- python >= 3.9
-- node >= 16.0
-- poetry >= 1.1.14
+- [uv](https://docs.astral.sh/uv/) >= 0.5
+- [foundry](https://getfoundry.sh/) (anvil is used as the fork provider)
 
 ## Setup
 
 ```shell
-poetry install
-npm install
-export WEB3_INFURA_PROJECT_ID=<your infura project id>
+uv sync
+export RPC_URL=<your mainnet rpc url>
 ```
 
-and run
-
-```shell
-poetry shell
-```
-
-to initialize shell for `ape` command usage.
-
-As long as the environment shell prompt name is cumbersome you might want to call
-`export PS1="allowed-list-env $ "` to make it shorter.
+Prefix `ape` commands with `uv run` (e.g. `uv run ape test ...`), or activate the environment with `source .venv/bin/activate`.
 
 ## Configuration
 
@@ -40,7 +26,7 @@ is read automatically upon network variable `NETWORK` is set. Currently, `NETWOR
 ## Run tests
 
 ```shell
-NETWORK=mainnet ape test -s --network :mainnet-fork:hardhat
+NETWORK=mainnet uv run ape test -s --network :mainnet-fork:foundry
 ```
 
 The networks supported are `mainnet-fork` and `goerli-fork` for which network-specific
@@ -55,7 +41,7 @@ Get sure your account is imported to Ape (see `ape accounts list`).
 Let's assume the deploy account alias is `lido_deployer`. To deploy on mainnet fork run:
 
 ```shell
-DEPLOYER=lido_deployer NETWORK=mainnet ape run deploy --network :mainnet-fork:hardhat
+DEPLOYER=lido_deployer NETWORK=mainnet uv run ape run deploy --network :mainnet-fork:foundry
 ```
 
 ### Custom RPC deployment
@@ -63,7 +49,7 @@ DEPLOYER=lido_deployer NETWORK=mainnet ape run deploy --network :mainnet-fork:ha
 Let's assume the deploy account alias is `lido_deployer`. To deploy on network `holesky` via custom RPC run:
 
 ```shell
-DEPLOYER=lido_deployer NETWORK=holesky ape run deploy --network <RPC-URI>
+DEPLOYER=lido_deployer NETWORK=holesky uv run ape run deploy --network <RPC-URI>
 ```
 
 Deployment addresses are available in files `deployed_{network-name}.txt` where `{network-name}` is name of the network.
@@ -73,5 +59,5 @@ Deployment addresses are available in files `deployed_{network-name}.txt` where 
 Please, use the shared pre-commit hooks to maintain code style:
 
 ```bash
-poetry run pre-commit install
+uv run pre-commit install
 ```

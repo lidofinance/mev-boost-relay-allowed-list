@@ -1,5 +1,30 @@
 import sys
 import os
+
+from evm_trace.geth import TraceFrame
+
+# anvil (foundry >= 1.0) omits gasCost in debug_traceTransaction struct logs,
+# while evm-trace of the ape 0.6 era requires it; default it to keep revert
+# message extraction working
+if "gas_cost" in TraceFrame.model_fields:
+    TraceFrame.model_fields["gas_cost"].default = 0
+    TraceFrame.model_rebuild(force=True)
+
+from ape.utils.abi import LogInputABICollection
+
+# ape 0.6 zips event arg values (decoded topics-first) with ABI types in
+# declaration order, mis-typing events whose indexed args are not a prefix
+# (e.g. ERC20Recovered); return args in ABI order to realign the zip
+_original_decode = LogInputABICollection.decode
+
+def _decode_in_abi_order(self, topics, data, use_hex_on_fail=False):
+    decoded = _original_decode(self, topics, data, use_hex_on_fail=use_hex_on_fail)
+    order = [i.name for i in self.abi.inputs]
+    return {name: decoded[name] for name in order if name in decoded}
+
+LogInputABICollection.decode = _decode_in_abi_order
+
+
 from typing import NamedTuple
 import pytest
 from ape import accounts, project
@@ -68,7 +93,8 @@ def usdt_token():
 def assert_single_event(receipt: ReceiptAPI, event: ContractEvent, args: dict):
     logs: list[ContractLog] = list(event.from_receipt(receipt))
     assert len(logs) == 1, f"event '{event.name}' must exist and be single"
-    assert logs[0].event_arguments == args, f"incorrect event '{event.name}' arguments"
+    expected = {k: list(v) if isinstance(v, tuple) else v for k, v in args.items()}
+    assert logs[0].event_arguments == expected, f"incorrect event '{event.name}' arguments"
 
 
 class Helpers:
