@@ -19,7 +19,7 @@ override-dependencies = ["numpy>=2"]
 dev = [
     "ape-foundry~=0.8.12",
     "ape-vyper~=0.8.12",
-    "black~=25.11",
+    "black~=26.5",
 ]
 
 [tool.black]
