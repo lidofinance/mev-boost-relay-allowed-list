@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  lint:
+  run-lint:
     name: Black check
     runs-on: ubuntu-latest
     steps:
