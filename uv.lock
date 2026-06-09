@@ -715,7 +715,7 @@ wheels = [
 
 [[package]]
 name = "eth-ape"
-version = "0.6.22"
+version = "0.6.27"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -752,9 +752,9 @@ dependencies = [
     { name = "watchdog" },
     { name = "web3", extra = ["tester"] },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/35/9c/333e983021fdcde0b4eba519098801c397a60f6485a7f0900dc72c7369c7/eth-ape-0.6.22.tar.gz", hash = "sha256:dcadd800a532cf253111340c4bd027624fde85755993d147d0233b137a0ad99f", size = 1199896, upload-time = "2023-10-10T22:03:59.148Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f3/92/f7e4f5227258f3f6ac0f4df72cc637adacaa6bd49396c760f0b9d8ee826e/eth-ape-0.6.27.tar.gz", hash = "sha256:8975d5726d4d070955573e9604e2de12af833b61318e7210424b41e0b401b24f", size = 1214014, upload-time = "2023-12-07T20:20:09.667Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f6/b3/187a3a0cfcec0c5a65419b04f18f865bbe30927d580fc8399f02174a5bca/eth_ape-0.6.22-py3-none-any.whl", hash = "sha256:a68d9ccb0acd533662625da0247854f64e8fd6cd031f83a64b1b96a54a990881", size = 287027, upload-time = "2023-10-10T22:03:56.287Z" },
+    { url = "https://files.pythonhosted.org/packages/0f/73/cb638547a3a3727efe2534896cf2579020f50042aea0b0904b5ee70a0ec9/eth_ape-0.6.27-py3-none-any.whl", hash = "sha256:fb3eb387a2e073f3ec2ebf3b86ae764e2cdfb8af1d316a82c010884c55b84dde", size = 292973, upload-time = "2023-12-07T20:20:03.426Z" },
 ]
 
 [[package]]
@@ -934,7 +934,7 @@ wheels = [
 
 [[package]]
 name = "ethpm-types"
-version = "0.5.8"
+version = "0.5.11"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "eth-utils" },
@@ -945,9 +945,9 @@ dependencies = [
     { name = "requests", version = "2.32.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "requests", version = "2.34.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e6/b0/1d5b538f80e7d5ae389d50eed1b2bdfa384b3b8067126193dab899906a9e/ethpm-types-0.5.8.tar.gz", hash = "sha256:deaa9ec75cc8d02a047d5a2b065bd038ee6654ba2ffcf6e4c969181eacfdffc2", size = 1210487, upload-time = "2023-10-10T14:16:44.157Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/05/90/aff8bf5553e93d9a64e70e71f39cc11c82608c6f3061d2a73abd4ef8e39c/ethpm-types-0.5.11.tar.gz", hash = "sha256:df6b0f06ab6ced834ec1c2858c30817095846739747313b41a681b0eb20b9251", size = 1213929, upload-time = "2023-11-18T15:49:51.365Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/42/67/e537caa2e426faf203609a0268a2ea30dfe8ee62eb88e7c8e9fc8e3ead10/ethpm_types-0.5.8-py3-none-any.whl", hash = "sha256:1fcf4fd551133ec917b99406b206713f34112f5e3c030ece5dcb3e5ed8562ee3", size = 31347, upload-time = "2023-10-10T14:16:42.135Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/e7/2e53aaf7cbd24c6b34ff1623d984482dafb5d65ba2757bb32fb693be85fc/ethpm_types-0.5.11-py3-none-any.whl", hash = "sha256:2a3b39cbf46bc8248f1c98bb56584c65496b63d1200a30f8d5daa74c4e4c7fd8", size = 32266, upload-time = "2023-11-18T15:49:49.559Z" },
 ]
 
 [[package]]
@@ -1482,8 +1482,8 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "eth-ape", specifier = "~=0.6.22" },
-    { name = "setuptools", specifier = "<81" },
+    { name = "eth-ape", specifier = "~=0.6.27" },
+    { name = "setuptools", specifier = "<83" },
 ]
 
 [package.metadata.requires-dev]
@@ -1492,7 +1492,7 @@ dev = [
     { name = "ape-vyper", specifier = ">=0.6.11,<0.7" },
     { name = "black", specifier = "~=25.11.0" },
     { name = "pip" },
-    { name = "pre-commit", specifier = "~=2.19.0" },
+    { name = "pre-commit", specifier = "~=4.3.0" },
     { name = "vyper", specifier = "==0.3.6" },
 ]
 
@@ -1798,7 +1798,7 @@ wheels = [
 
 [[package]]
 name = "pre-commit"
-version = "2.19.0"
+version = "4.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cfgv", version = "3.4.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
@@ -1807,12 +1807,11 @@ dependencies = [
     { name = "identify", version = "2.6.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "nodeenv" },
     { name = "pyyaml" },
-    { name = "toml" },
     { name = "virtualenv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d0/3c/f0906f9e015c2fd38ca912cb9a6d2eb10c6ca0ce0fd318239993466613b7/pre_commit-2.19.0.tar.gz", hash = "sha256:4233a1e38621c87d9dda9808c6606d7e7ba0e087cd56d3fe03202a01d2919615", size = 172781, upload-time = "2022-05-05T13:55:15.245Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ff/29/7cf5bbc236333876e4b41f56e06857a87937ce4bf91e117a6991a2dbb02a/pre_commit-4.3.0.tar.gz", hash = "sha256:499fe450cc9d42e9d58e606262795ecb64dd05438943c62b66f6a8673da30b16", size = 193792, upload-time = "2025-08-09T18:56:14.651Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/62/e4/5010a2ac43548cb35975d0c8011d4f43d9201fe63154698965effba4cf02/pre_commit-2.19.0-py2.py3-none-any.whl", hash = "sha256:10c62741aa5704faea2ad69cb550ca78082efe5697d6f04e5710c3c229afdd10", size = 199268, upload-time = "2022-05-05T13:55:13.436Z" },
+    { url = "https://files.pythonhosted.org/packages/5b/a5/987a405322d78a73b66e39e4a90e4ef156fd7141bf71df987e50717c321b/pre_commit-4.3.0-py2.py3-none-any.whl", hash = "sha256:2b0747ad7e6e967169136edffee14c16e148a778a54e4f967921aa1ebf2308d8", size = 220965, upload-time = "2025-08-09T18:56:13.192Z" },
 ]
 
 [[package]]
@@ -2747,11 +2746,11 @@ wheels = [
 
 [[package]]
 name = "setuptools"
-version = "80.10.2"
+version = "82.0.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/76/95/faf61eb8363f26aa7e1d762267a8d602a1b26d4f3a1e758e92cb3cb8b054/setuptools-80.10.2.tar.gz", hash = "sha256:8b0e9d10c784bf7d262c4e5ec5d4ec94127ce206e8738f29a437945fbc219b70", size = 1200343, upload-time = "2026-01-25T22:38:17.252Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4f/db/cfac1baf10650ab4d1c111714410d2fbb77ac5a616db26775db562c8fab2/setuptools-82.0.1.tar.gz", hash = "sha256:7d872682c5d01cfde07da7bccc7b65469d3dca203318515ada1de5eda35efbf9", size = 1152316, upload-time = "2026-03-09T12:47:17.221Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/94/b8/f1f62a5e3c0ad2ff1d189590bfa4c46b4f3b6e49cef6f26c6ee4e575394d/setuptools-80.10.2-py3-none-any.whl", hash = "sha256:95b30ddfb717250edb492926c92b5221f7ef3fbcc2b07579bcd4a27da21d0173", size = 1064234, upload-time = "2026-01-25T22:38:15.216Z" },
+    { url = "https://files.pythonhosted.org/packages/9d/76/f789f7a86709c6b087c5a2f52f911838cad707cc613162401badc665acfe/setuptools-82.0.1-py3-none-any.whl", hash = "sha256:a59e362652f08dcd477c78bb6e7bd9d80a7995bc73ce773050228a348ce2e5bb", size = 1006223, upload-time = "2026-03-09T12:47:15.026Z" },
 ]
 
 [[package]]
@@ -2812,15 +2811,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/6b/be/af287da44f310088ea7c6b40f02d4f626a8903afbb678098ede01995b662/stack_data-0.5.1.tar.gz", hash = "sha256:95eb784942e861a3d80efd549ff9af6cf847d88343a12eb681d7157cfcb6e32b", size = 43435, upload-time = "2022-09-25T14:10:46.89Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/57/dc/9367ef8074e2331706fbad14d749157341fbffd21339c43820e07664ec94/stack_data-0.5.1-py3-none-any.whl", hash = "sha256:5120731a18ba4c82cefcf84a945f6f3e62319ef413bfc210e32aca3a69310ba2", size = 24247, upload-time = "2022-09-25T14:10:43.63Z" },
-]
-
-[[package]]
-name = "toml"
-version = "0.10.2"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f", size = 22253, upload-time = "2020-11-01T01:40:22.204Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b", size = 16588, upload-time = "2020-11-01T01:40:20.672Z" },
 ]
 
 [[package]]
