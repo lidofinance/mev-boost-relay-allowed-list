@@ -10,6 +10,11 @@ dependencies = [
     "eth-ape~=0.8.50",
 ]
 
+[tool.uv]
+# eth-ape pins numpy<2, but numpy 1.x has no python 3.13 wheels and builds
+# from source; ape works fine with numpy 2 (pandas 2.3 supports it)
+override-dependencies = ["numpy>=2"]
+
 [dependency-groups]
 dev = [
     "ape-foundry~=0.8.12",
