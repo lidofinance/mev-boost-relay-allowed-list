@@ -11,7 +11,6 @@ from conftest import (
     ZERO_ADDRESS,
 )
 
-
 MAX_RELAYS_NUM = 40  # supposed to correspond to the limit in the contract
 
 

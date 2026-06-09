@@ -2,7 +2,6 @@ import os
 
 from ape import accounts
 
-
 DEPLOYER_ENV_VAR = "DEPLOYER"
 NETWORK_ENV_VAR = "NETWORK"
 MAINNET = "mainnet"

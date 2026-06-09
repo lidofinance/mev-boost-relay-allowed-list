@@ -17,7 +17,6 @@ from config import (
     USDT_TOKEN_HOLDER_ADDRESS,
 )
 
-
 suppress_3rd_party_deprecation_warnings = pytest.mark.filterwarnings("ignore:abi.decode_single().+is.+deprecated")
 
 ZERO_ADDRESS: AddressType = "0x0000000000000000000000000000000000000000"
