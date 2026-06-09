@@ -9,11 +9,11 @@ homepage = "https://mainnet.lido.fi"
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
-eth-ape = "~0.6.22"
+eth-ape = ">=0.6.22,<0.8.0"
 
 [tool.poetry.dev-dependencies]
-black = "~22.6.0"
-pre-commit = "~2.19.0"
+black = "~24.8.0"
+pre-commit = "~3.5.0"
 vyper = "0.3.6"
 
 [build-system]
