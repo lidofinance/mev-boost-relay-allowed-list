@@ -30,6 +30,11 @@ jobs:
       - name: Install python dependencies
         run: uv sync
 
+      - name: Check RPC_URL is configured
+        run: test -n "$RPC_URL" || { echo "::error::RPC_URL secret is empty or missing"; exit 1; }
+        env:
+          RPC_URL: ${{ secrets.RPC_URL }}
+
       - name: Run tests
         run: >
           uv run ape test -s --network :mainnet-fork:foundry
