@@ -41,7 +41,7 @@ Get sure your account is imported to Ape (see `ape accounts list`).
 Let's assume the deploy account alias is `lido_deployer`. To deploy on mainnet fork run:
 
 ```shell
-DEPLOYER=lido_deployer NETWORK=mainnet ape run deploy --network :mainnet-fork:foundry
+DEPLOYER=lido_deployer NETWORK=mainnet uv run ape run deploy --network :mainnet-fork:foundry
 ```
 
 ### Custom RPC deployment
@@ -49,7 +49,7 @@ DEPLOYER=lido_deployer NETWORK=mainnet ape run deploy --network :mainnet-fork:fo
 Let's assume the deploy account alias is `lido_deployer`. To deploy on network `holesky` via custom RPC run:
 
 ```shell
-DEPLOYER=lido_deployer NETWORK=holesky ape run deploy --network <RPC-URI>
+DEPLOYER=lido_deployer NETWORK=holesky uv run ape run deploy --network <RPC-URI>
 ```
 
 Deployment addresses are available in files `deployed_{network-name}.txt` where `{network-name}` is name of the network.
