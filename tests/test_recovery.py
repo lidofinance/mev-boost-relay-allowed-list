@@ -96,7 +96,9 @@ def test_recover_erc20_failure_due_zero_token_address(allowed_list, stranger, he
 
 
 def test_recover_erc20_with_incorrect_eoa_token_address(allowed_list, stranger, lido_agent):
-    eoa = stranger
+    # anvil test accounts carry EIP-7702 delegation code on current mainnet,
+    # use an address that is guaranteed to have no code
+    eoa = "0x000000000000000000000000000000000000dEaD"
     with reverts("eoa token address"):
         allowed_list.recover_erc20(eoa, 10**18, stranger, sender=lido_agent)
 
