@@ -1,23 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    cooldown:
-      default-days: 7
-    groups:
-      javascript:
-        patterns: ["*"]
-    ignore:
-      - dependency-name: "hardhat"
-        update-types: ["version-update:semver-major"]
-    labels: ["dependencies", "javascript"]
-    commit-message:
-      prefix: "build"
-      include: "scope"
-
-  - package-ecosystem: "pip"
+  - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "weekly"
@@ -28,7 +11,22 @@ updates:
         patterns: ["*"]
     ignore:
       - dependency-name: "vyper"
+      - dependency-name: "eth-ape"
+        update-types: ["version-update:semver-minor"]
     labels: ["dependencies", "python"]
     commit-message:
       prefix: "build"
       include: "scope"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns: ["*"]
+    labels: ["dependencies", "github-actions"]
+    commit-message:
+      prefix: "ci"
