@@ -3,8 +3,6 @@ name: mev-boost-relay-allowed-list
 plugins:
   - name: foundry
     version: ">=0.6.13, <0.7"
-  - name: etherscan
-    version: ">=0.6.10, <0.7"
   - name: vyper
     version: ">=0.6.11, <0.7"
 

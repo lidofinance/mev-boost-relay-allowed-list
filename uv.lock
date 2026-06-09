@@ -176,22 +176,6 @@ wheels = [
 ]
 
 [[package]]
-name = "ape-etherscan"
-version = "0.6.11"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "eth-ape" },
-    { name = "requests", version = "2.32.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "requests", version = "2.34.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "yarl", version = "1.22.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "yarl", version = "1.24.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/d6/c5/826df1afe71f7fe3a85a817798909817ab3ad447c47507ce58c3895d0f17/ape-etherscan-0.6.11.tar.gz", hash = "sha256:2767f542539c81fdbcecc34e9445c68a59c15236fe67727b219882dcbbfb9284", size = 88734, upload-time = "2023-12-13T01:18:09.142Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ab/fb/88eae51984ede490b040f2a034863e92554e4cf968ceecc9ed0dc0c164c1/ape_etherscan-0.6.11-py3-none-any.whl", hash = "sha256:b0c2a3a966d2aa98e11d41e5a80eaf8037ed93a2b537b318ac7f278b5b6e6317", size = 21777, upload-time = "2023-12-13T01:18:05.914Z" },
-]
-
-[[package]]
 name = "ape-foundry"
 version = "0.6.17"
 source = { registry = "https://pypi.org/simple" }
@@ -1487,7 +1471,6 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "ape-etherscan" },
     { name = "ape-foundry" },
     { name = "ape-vyper" },
     { name = "black" },
@@ -1505,7 +1488,6 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "ape-etherscan", specifier = ">=0.6.10,<0.7" },
     { name = "ape-foundry", specifier = ">=0.6.13,<0.7" },
     { name = "ape-vyper", specifier = ">=0.6.11,<0.7" },
     { name = "black", specifier = "~=22.6.0" },
