@@ -15,7 +15,6 @@ dev = [
     "ape-foundry~=0.8.12",
     "ape-vyper~=0.8.12",
     "black~=25.11",
-    "pre-commit~=4.3",
 ]
 
 [tool.black]
