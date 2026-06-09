@@ -30,7 +30,7 @@ dev = [
     # ape plugins from ape-config.yaml, managed by uv instead of `ape plugins install`
     "ape-foundry>=0.6.13,<0.7",
     "ape-vyper>=0.6.11,<0.7",
-    "black~=22.6.0",
+    "black~=25.11.0",
     "pre-commit~=2.19.0",
     "vyper==0.3.6",
 ]
