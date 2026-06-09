@@ -2,11 +2,9 @@ name: mev-boost-relay-allowed-list
 
 plugins:
   - name: foundry
-    version: ">=0.6.13, <0.7"
   - name: vyper
-    version: ">=0.6.11, <0.7"
 
-geth:
+node:
   ethereum:
     mainnet:
       uri: $RPC_URL
@@ -15,4 +13,4 @@ foundry:
   fork:
     ethereum:
       mainnet:
-        upstream_provider: geth
+        upstream_provider: node

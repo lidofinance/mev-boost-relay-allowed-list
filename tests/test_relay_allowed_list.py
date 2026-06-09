@@ -54,7 +54,7 @@ def test_add_relay(allowed_list, lido_agent):
     assert_single_event(receipt, allowed_list.RelayAdded, {"relay": TEST_RELAY0, "uri_hash": TEST_RELAY0_URI_HASH})
     assert_single_event(receipt, allowed_list.AllowedListUpdated, {"allowed_list_version": 1})
     relays = allowed_list.get_relays()
-    assert relays == list(TEST_RELAY0)
+    assert relays == [TEST_RELAY0]
     assert allowed_list.get_allowed_list_version() == 1
 
     assert allowed_list.get_relay_by_uri(TEST_RELAY0.uri) == TEST_RELAY0
@@ -70,7 +70,7 @@ def test_manager_can_add_relay(allowed_list, lido_agent, lido_easy_track_script_
     allowed_list.set_manager(lido_easy_track_script_executor, sender=lido_agent)
 
     allowed_list.add_relay(*TEST_RELAY0, sender=lido_easy_track_script_executor)
-    assert allowed_list.get_relays() == list(TEST_RELAY0)
+    assert allowed_list.get_relays() == [TEST_RELAY0]
 
     allowed_list.dismiss_manager(sender=lido_agent)
     assert allowed_list.get_manager() == ZERO_ADDRESS
@@ -179,7 +179,7 @@ def test_remove_first_relay(allowed_list, lido_agent):
         allowed_list.RelayRemoved,
         {"uri": TEST_RELAY0.uri, "uri_hash": TEST_RELAY0_URI_HASH},
     )
-    assert allowed_list.get_relays() == list(TEST_RELAY1)
+    assert allowed_list.get_relays() == [TEST_RELAY1]
     assert allowed_list.get_allowed_list_version() == 3
 
 
@@ -192,7 +192,7 @@ def test_remove_last_relay(allowed_list, lido_agent):
         allowed_list.RelayRemoved,
         {"uri": TEST_RELAY1.uri, "uri_hash": TEST_RELAY1_URI_HASH},
     )
-    assert allowed_list.get_relays() == list(TEST_RELAY0)
+    assert allowed_list.get_relays() == [TEST_RELAY0]
     assert allowed_list.get_allowed_list_version() == 3
 
 

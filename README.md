@@ -56,8 +56,8 @@ Deployment addresses are available in files `deployed_{network-name}.txt` where 
 
 ## Code style
 
-Please, use the shared pre-commit hooks to maintain code style:
+The codebase is formatted with [black](https://github.com/psf/black), enforced by the CI gate:
 
 ```bash
-uv run pre-commit install
+uv run black .
 ```

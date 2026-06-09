@@ -10,7 +10,6 @@ updates:
       python:
         patterns: ["*"]
     ignore:
-      - dependency-name: "vyper"
       - dependency-name: "eth-ape"
         update-types: ["version-update:semver-minor"]
     labels: ["dependencies", "python"]

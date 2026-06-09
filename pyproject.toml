@@ -5,34 +5,16 @@ description = "Contract storing a list of MEV boost relays approved by Lido DAO"
 authors = [{ name = "Lido dev team" }]
 license = { text = "MIT" }
 readme = "README.md"
-requires-python = ">=3.9,<3.11"
+requires-python = ">=3.10"
 dependencies = [
-    "eth-ape~=0.6.22",
-    # eth-keyfile (via eth-account) imports pkg_resources at runtime; poetry shipped
-    # setuptools in every venv implicitly, uv does not
-    "setuptools<81",
-]
-
-[tool.uv]
-constraint-dependencies = [
-    # evm-trace 0.1.x imports HashBytes20, which was removed in eth-pydantic-types 0.2
-    "eth-pydantic-types<0.2",
-    # pandas 1.x wheels are built against the numpy 1.x C ABI
-    "numpy<2",
-    # ape 0.6 Group subclass assigns .commands, which became a property in click 8.2
-    "click<8.2",
+    "eth-ape~=0.8.50",
 ]
 
 [dependency-groups]
 dev = [
-    # ape 0.6 shells out to pip when validating plugins; uv venvs do not bundle pip
-    "pip",
-    # ape plugins from ape-config.yaml, managed by uv instead of `ape plugins install`
-    "ape-foundry>=0.6.13,<0.7",
-    "ape-vyper>=0.6.11,<0.7",
-    "black~=25.11.0",
-    "pre-commit~=2.19.0",
-    "vyper==0.3.6",
+    "ape-foundry~=0.8.12",
+    "ape-vyper~=0.8.12",
+    "black~=25.11",
 ]
 
 [tool.black]
